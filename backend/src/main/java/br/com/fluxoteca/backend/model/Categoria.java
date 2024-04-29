@@ -2,7 +2,7 @@ package br.com.fluxoteca.backend.model;
 
 import java.time.LocalDate;
 
-import br.com.fluxoteca.backend.dto.Usuario.AtualizacaoUsuarioDto;
+import br.com.fluxoteca.backend.dto.Categoria.AtualizacaoCategoriaDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +25,7 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String nome;
     private boolean status;
     private LocalDate dataCriacao;
@@ -38,7 +38,7 @@ public class Categoria {
     }
 
 
-    public void atualizarInformacao(@Valid AtualizacaoUsuarioDto data){
+    public void atualizarInformacao(@Valid AtualizacaoCategoriaDto data){
 
         if( data.nome() != null && !data.nome().isEmpty()){
             this.nome = data.nome();

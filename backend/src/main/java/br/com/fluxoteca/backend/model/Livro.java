@@ -3,13 +3,16 @@ package br.com.fluxoteca.backend.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.fluxoteca.backend.dto.Livro.AtualizacaoLivroDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,9 +27,9 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    @OneToMany
-    private List<Autor> autores;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Autor autor;
+    @ManyToOne(fetch = FetchType.EAGER)
     private Categoria categoria;
     @OneToMany
     private List<Exemplar> exemplares;
@@ -38,6 +41,16 @@ public class Livro {
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = LocalDate.now();
         this.status = true;
+    }
+
+    public void atualizarInformacao(@Valid AtualizacaoLivroDto data){
+
+        if( data.nome() != null && !data.nome().isEmpty()){
+            this.nome = data.nome();
+            this.dataModificacao = LocalDate.now();
+        }
+            
+        
     }
 
     public void inativar() {
