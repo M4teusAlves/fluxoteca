@@ -16,9 +16,9 @@ public record CriacaoUsuarioDto(
     @NotBlank
     @Email
     String email,
-    @NotBlank
+    // @NotBlank
     String senha,
-    @NotBlank
+    // @NotBlank
     String afiliacao,
     @NotNull
     LocalDate dataNascimento,

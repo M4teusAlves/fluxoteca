@@ -18,11 +18,16 @@ import {
 } from "@nextui-org/react";
 import {PlusIcon} from "./PlusIcon";
 import {SearchIcon} from "./SearchIcon";
-import {columns, users, statusOptions} from "./data";
-import { useState, useCallback, useMemo } from "react";
+import {columns, fetchUsers, statusOptions} from "./data";
+import { useState, useCallback, useMemo, useEffect } from "react";
+
+import { useJwtToken } from "@/hooks/useJwtToken";
 
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
+
+import { useDisclosure } from "@nextui-org/react"; // Import useDisclosure
+import ModalUser from "../modal/ModalUser";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -31,9 +36,63 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 
 const INITIAL_VISIBLE_COLUMNS = ["id", "name", "fone", "email", "status", "actions"];
 
-type User = typeof users[0];
+type User = {
+  id: number,
+  nome: string,
+  endereco: string,
+  email: string,
+  // afiliacao: string,
+  dataNascimento: string,
+  tipo?: "LEITOR",
+  telefone: string,
+  status: string
+}
 
 export default function TableUser() {
+  
+
+  const token = useJwtToken();
+  const [users, setUsers] = useState<User[]>([]); // State to store fetched users
+  // const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!token) return;
+        setIsLoading(true);
+        const usersData = await fetchUsers(token);
+        setUsers(usersData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  const [showModal, setShowModal] = useState(false);
+  const { isOpen, onOpen } = useDisclosure(); // Use useDisclosure
+  // console.log(isOpen)
+
+  const handleClick = () => {
+    // onOpenChange(); // Open the modal on button click
+    // onOpen();
+    // console.log(isOpen)
+    setShowModal(true);
+    // console.log(showModal);
+  };
+
+  // const handleOpenChange = (newValue: boolean) => {
+  //   onOpenChange(newValue); // Update the isOpen state in TableUser
+  // };
+
+  const handleClose = () => {
+    setShowModal(false); // Update modal visibility state when clicked
+  };
+
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -59,7 +118,7 @@ export default function TableUser() {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        user.nome.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
@@ -95,7 +154,7 @@ export default function TableUser() {
 
     switch (columnKey) {
       case "name":
-        return (<span>{user.name}</span>);
+        return (<span>{user.nome}</span>);
       case "status":
         return (
           <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
@@ -106,8 +165,8 @@ export default function TableUser() {
         return (
           <div className="relative flex justify-end items-center gap-2">
                 <Button isIconOnly size="sm" variant="bordered">
-                  {/* <VisibilityOutlinedIcon /> */}
-                  <ModeEditOutlinedIcon className="text-[#7B6ED6]"/>
+                  <VisibilityOutlinedIcon className="text-[#7B6ED6]"/>
+                  {/* <ModeEditOutlinedIcon className="text-[#7B6ED6]"/> */}
                 </Button>
           </div>
         );
@@ -149,9 +208,14 @@ export default function TableUser() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />}>
+
+            {/* {showModal && <ModalUser isOpen={showModal} />} // Conditional rendering of ModalUser */}
+            {/* <ModalUser isOpen={showModal}/> */}
+            {/* <button onClick={handleClick}>Adicionar Leitor</button> */}
+            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
               Adicionar Leitor
             </Button>
+            
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -197,39 +261,43 @@ export default function TableUser() {
   }, [page, pages]);
 
   return (
-    <Table
-      className=""
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{ wrapper: "h-[calc(100vh-192px)]" }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns} >
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"Nenhum usuário encontrado"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+      <Table
+        className=""
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{ wrapper: "h-[calc(100vh-192px)]" }}
+        selectedKeys={selectedKeys}
+        selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns} >
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"Nenhum usuário encontrado"} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {/* Conditionally render ModalUser component */}
+      {showModal && <ModalUser isOpen={showModal} onClose={() => setShowModal(false)} />}
+    </>
   );
 }
