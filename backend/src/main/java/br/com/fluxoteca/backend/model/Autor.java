@@ -2,7 +2,7 @@ package br.com.fluxoteca.backend.model;
 
 import java.time.LocalDate;
 
-import br.com.fluxoteca.backend.dto.Categoria.AtualizacaoCategoriaDto;
+import br.com.fluxoteca.backend.dto.Autor.AtualizacaoAutorDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,19 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Categoria
- */
 @Entity
-@Table(name = "categorias")
-@AllArgsConstructor
+@Table(name = "autores")
 @Getter
 @Setter
-public class Categoria {
-
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,14 +29,13 @@ public class Categoria {
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
 
-    public Categoria() {
+    public Autor() {
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = LocalDate.now();
         this.status = true;
     }
 
-
-    public void atualizarInformacao(@Valid AtualizacaoCategoriaDto data){
+    public void atualizarInformacao(@Valid AtualizacaoAutorDto data){
 
         if( data.nome() != null && !data.nome().isEmpty()){
             this.nome = data.nome();
@@ -62,6 +59,6 @@ public class Categoria {
             this.dataModificacao = LocalDate.now();
         }
     }
-    
 
 }
+
