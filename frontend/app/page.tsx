@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { Form } from '../components/signin/FormSignIn';
-import { SubmitButton } from '../components/signin/SubmitButton';
+// import Link from 'next/link';
+import { SigninForm } from '../components/forms/SigninForm';
+// import { SubmitButton } from '../components/forms/SubmitButton';
 import logo from '../public/logo.png'
 import Image from 'next/image';
 
@@ -18,16 +18,15 @@ export default function Login() {
               Use seu email e senha para entrar
             </p>
           </div>
-          <Form
-            action={async (formData: FormData) => {
-              'use server';
-              console.log(formData)
-            }}
-          >
-          <Link href="/system/users" className="font-semibold text-gray-800">
+          <SigninForm
+            // action={async (formData: FormData) => {
+            //   'use server';
+            //   console.log(formData)
+            // }}
+          />
+          {/* <Link href="/system/users" className="font-semibold text-gray-800">
             <SubmitButton>Entrar</SubmitButton>
-          </Link>
-        </Form>
+          </Link> */}
         </div>
       </div>
     </div>
