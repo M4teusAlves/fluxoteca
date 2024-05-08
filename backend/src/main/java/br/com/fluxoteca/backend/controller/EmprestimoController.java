@@ -22,6 +22,8 @@ import br.com.fluxoteca.backend.model.Emprestimo;
 import br.com.fluxoteca.backend.repository.EmprestimoRepository;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
 import br.com.fluxoteca.backend.repository.LivroRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -29,6 +31,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/emprestimos")
+@Tag(name="Empréstimos")
 public class EmprestimoController {
     
     @Autowired
@@ -43,6 +46,7 @@ public class EmprestimoController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cria um empréstimo")
     public ResponseEntity<EmprestimoResponseDto> criar(@RequestBody @Valid CriacaoEmprestimoDto data, UriComponentsBuilder uriBuilder){
         Emprestimo emprestimo = new Emprestimo();
 
@@ -69,6 +73,7 @@ public class EmprestimoController {
     }
 
     @GetMapping
+    @Operation(summary = "Lista todos os empréstimos")
     public ResponseEntity<List<EmprestimoResponseDto>> listar(){
 
         var emprestimosList = emprestimoRepository.findAll().stream().map(EmprestimoResponseDto::new).toList();
@@ -78,6 +83,7 @@ public class EmprestimoController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza um empréstimo")
     public ResponseEntity<EmprestimoResponseDto> atualizar(@RequestBody @Valid AtualizacaoEmprestimoDto data){
         var emprestimo = emprestimoRepository.getReferenceById(data.id());
         emprestimo.atualizarInformacao(data);
@@ -88,6 +94,7 @@ public class EmprestimoController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta um empréstimo")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var emprestimo = emprestimoRepository.getReferenceById(id);
         emprestimo.inativar();
@@ -96,6 +103,7 @@ public class EmprestimoController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "Reativa um empréstimo")
     public void reativar(@PathVariable Long id){
         var emprestimo = emprestimoRepository.getReferenceById(id);
         emprestimo.ativar();

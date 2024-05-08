@@ -6,6 +6,8 @@ import br.com.fluxoteca.backend.dto.Authentication.TokenJWTDataDto;
 import br.com.fluxoteca.backend.dto.Usuario.AutenticaLoginDto;
 import br.com.fluxoteca.backend.model.Usuario;
 import br.com.fluxoteca.backend.service.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 @RequestMapping("/login")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Login")
 public class AuthenticationController {
     
     @Autowired
@@ -29,6 +32,7 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping
+    @Operation(summary = "Realiza o login")
     public ResponseEntity<?> login(@RequestBody AutenticaLoginDto data) {
         
         var token = new UsernamePasswordAuthenticationToken(data.login(), data.senha());

@@ -19,6 +19,8 @@ import br.com.fluxoteca.backend.dto.Categoria.CategoriaResponseDto;
 import br.com.fluxoteca.backend.dto.Categoria.CriacaoCategoriaDto;
 import br.com.fluxoteca.backend.model.Categoria;
 import br.com.fluxoteca.backend.repository.CategoriaRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/categorias")
+@Tag(name="Categorias")
 public class CategoriaController {
 
     @Autowired
@@ -33,6 +36,7 @@ public class CategoriaController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cria uma categoria" )
     public ResponseEntity<CategoriaResponseDto> criar(@RequestBody @Valid CriacaoCategoriaDto data, UriComponentsBuilder uriBuilder){
         Categoria categoria = new Categoria();
         BeanUtils.copyProperties(data, categoria);
@@ -45,6 +49,7 @@ public class CategoriaController {
     }
 
     @GetMapping
+    @Operation(summary = "Lista todas as categorias")
     public ResponseEntity<List<CategoriaResponseDto>> listar(){
 
         var categoriasList = categoriaRepository.findAll().stream().map(CategoriaResponseDto::new).toList();
@@ -54,6 +59,7 @@ public class CategoriaController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza uma categoria")
     public ResponseEntity<CategoriaResponseDto> atualizar(@RequestBody @Valid AtualizacaoCategoriaDto data){
         var categoria = categoriaRepository.getReferenceById(data.id());
         categoria.atualizarInformacao(null);
@@ -64,6 +70,7 @@ public class CategoriaController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta uma categoria")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var categoria = categoriaRepository.getReferenceById(id);
         categoria.inativar();
@@ -72,6 +79,7 @@ public class CategoriaController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "Reativa uma categoria")
     public void reativar(@PathVariable Long id){
         var categoria = categoriaRepository.getReferenceById(id);
         categoria.ativar();

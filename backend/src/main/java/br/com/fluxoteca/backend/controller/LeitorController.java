@@ -20,11 +20,14 @@ import br.com.fluxoteca.backend.dto.Leitor.CriacaoLeitorDto;
 import br.com.fluxoteca.backend.dto.Leitor.LeitorResponseDto;
 import br.com.fluxoteca.backend.model.Leitor;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/leitores")
+@Tag(name="Leitores")
 public class LeitorController {
     
     @Autowired
@@ -32,6 +35,7 @@ public class LeitorController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cria um leitor")
     public ResponseEntity<LeitorResponseDto> criar(@RequestBody @Valid CriacaoLeitorDto data, UriComponentsBuilder uriBuilder){
         Leitor leitor = new Leitor();
         BeanUtils.copyProperties(data, leitor);
@@ -45,6 +49,7 @@ public class LeitorController {
     
 
     @GetMapping
+    @Operation(summary = "Lista todos os leitores")
     public ResponseEntity<List<LeitorResponseDto>> listar(){
 
         var leitorsList = leitorRepository.findAll().stream().map(LeitorResponseDto::new).toList();
@@ -54,6 +59,7 @@ public class LeitorController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza um leitor")
     public ResponseEntity<LeitorResponseDto> atualizar(@RequestBody @Valid AtualizacaoLeitorDto data){
         var Leitor = leitorRepository.getReferenceById(data.id());
         Leitor.atualizarInformacao(data);
@@ -64,6 +70,7 @@ public class LeitorController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta um leitor")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var Leitor = leitorRepository.getReferenceById(id);
         Leitor.inativar();
@@ -72,6 +79,7 @@ public class LeitorController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "Reativa um leitor")
     public void reativar(@PathVariable Long id){
         var Leitor = leitorRepository.getReferenceById(id);
         Leitor.ativar();
