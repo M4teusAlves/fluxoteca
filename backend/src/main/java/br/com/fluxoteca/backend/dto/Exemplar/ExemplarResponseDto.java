@@ -3,7 +3,6 @@ package br.com.fluxoteca.backend.dto.Exemplar;
 import java.time.LocalDate;
 
 import br.com.fluxoteca.backend.dto.Livro.LivroResponseDto;
-import br.com.fluxoteca.backend.model.Categoria;
 import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.model.enums.Estado;
 

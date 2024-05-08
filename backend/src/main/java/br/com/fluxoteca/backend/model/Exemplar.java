@@ -3,7 +3,6 @@ package br.com.fluxoteca.backend.model;
 import java.time.LocalDate;
 
 import br.com.fluxoteca.backend.dto.Exemplar.AtualizacaoExemplarDto;
-import br.com.fluxoteca.backend.dto.Livro.AtualizacaoLivroDto;
 import br.com.fluxoteca.backend.model.enums.Estado;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

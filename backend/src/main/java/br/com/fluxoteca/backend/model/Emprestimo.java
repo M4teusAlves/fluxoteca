@@ -2,10 +2,7 @@ package br.com.fluxoteca.backend.model;
 
 import java.time.LocalDate;
 
-import org.hibernate.annotations.ManyToAny;
-
 import br.com.fluxoteca.backend.dto.Emprestimo.AtualizacaoEmprestimoDto;
-import br.com.fluxoteca.backend.dto.Exemplar.AtualizacaoExemplarDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

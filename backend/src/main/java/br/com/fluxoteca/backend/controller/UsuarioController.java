@@ -20,6 +20,7 @@ import br.com.fluxoteca.backend.dto.Usuario.UsuarioResponseDto;
 import br.com.fluxoteca.backend.model.Usuario;
 import br.com.fluxoteca.backend.repository.UsuarioRepository;
 import br.com.fluxoteca.backend.service.PasswordEncryptionService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/usuarios")
-@Tag(name="Usuário")
+@Tag(name="Usuários")
 public class UsuarioController {
     
     @Autowired
@@ -40,6 +41,7 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cria um usuário")
     public ResponseEntity<UsuarioResponseDto> criar(@RequestBody @Valid CriacaoUsuarioDto data, UriComponentsBuilder uriBuilder){
         Usuario usuario = new Usuario();
         BeanUtils.copyProperties(data, usuario);
@@ -59,6 +61,7 @@ public class UsuarioController {
     
 
     @GetMapping
+    @Operation(summary = "Lista todos usuários")
     public ResponseEntity<List<UsuarioResponseDto>> listar(){
 
         var usuariosList = usuarioRepository.findAll().stream().map(UsuarioResponseDto::new).toList();
@@ -68,6 +71,7 @@ public class UsuarioController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza um usuário")
     public ResponseEntity<UsuarioResponseDto> atualizar(@RequestBody @Valid AtualizacaoUsuarioDto data){
         var usuario = usuarioRepository.getReferenceById(data.id());
         usuario.atualizarInformacao(data);
@@ -78,6 +82,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta um usuário")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var usuario = usuarioRepository.getReferenceById(id);
         usuario.inativar();
@@ -86,6 +91,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "Reativa um usuário")
     public void reativar(@PathVariable Long id){
         var usuario = usuarioRepository.getReferenceById(id);
         usuario.ativar();

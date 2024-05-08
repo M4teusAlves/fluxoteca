@@ -21,11 +21,14 @@ import br.com.fluxoteca.backend.model.Livro;
 import br.com.fluxoteca.backend.repository.AutorRepository;
 import br.com.fluxoteca.backend.repository.CategoriaRepository;
 import br.com.fluxoteca.backend.repository.LivroRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/livros")
+@Tag(name="Livros")
 public class LivroController {
     
     @Autowired
@@ -39,6 +42,7 @@ public class LivroController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cria um livro")
     public ResponseEntity<LivroResponseDto> criar(@RequestBody @Valid CriacaoLivroDto data, UriComponentsBuilder uriBuilder){
         Livro livro = new Livro();
 
@@ -62,6 +66,7 @@ public class LivroController {
     }
 
     @GetMapping
+    @Operation(summary = "Lista todos os livros")
     public ResponseEntity<List<LivroResponseDto>> listar(){
 
         var livrosList = livroRepository.findAll().stream().map(LivroResponseDto::new).toList();
@@ -71,6 +76,7 @@ public class LivroController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza um livro")
     public ResponseEntity<LivroResponseDto> atualizar(@RequestBody @Valid AtualizacaoLivroDto data){
         var livro = livroRepository.getReferenceById(data.id());
         livro.atualizarInformacao(data);
@@ -81,6 +87,7 @@ public class LivroController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta um livro")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var livro = livroRepository.getReferenceById(id);
         livro.inativar();
@@ -89,6 +96,7 @@ public class LivroController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "Reativa um livro")
     public void reativar(@PathVariable Long id){
         var livro = livroRepository.getReferenceById(id);
         livro.ativar();
