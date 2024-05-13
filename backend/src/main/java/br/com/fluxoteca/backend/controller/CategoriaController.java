@@ -62,7 +62,7 @@ public class CategoriaController {
     @Operation(summary = "Atualiza uma categoria")
     public ResponseEntity<CategoriaResponseDto> atualizar(@RequestBody @Valid AtualizacaoCategoriaDto data){
         var categoria = categoriaRepository.getReferenceById(data.id());
-        categoria.atualizarInformacao(null);
+        categoria.atualizarInformacao(data);
 
         return ResponseEntity.ok(new CategoriaResponseDto(categoria));
 

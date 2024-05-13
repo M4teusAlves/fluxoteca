@@ -9,7 +9,9 @@ import jakarta.validation.constraints.NotNull;
 public record CriacaoEmprestimoDto(
     @NotNull
     Long livro,
+    @NotNull
     Long leitor,
+    @NotNull
     LocalDate dataDevolucao
 ) {
     
