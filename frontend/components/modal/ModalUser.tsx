@@ -26,16 +26,16 @@ export default function ModalUser({ isOpen, onClose }: any) {
       }
 
       const user = {
-        tipo: 'LEITOR',
         nome: form.get('nome'),
         endereco: form.get('endereco'),
         email: form.get('email'),
-        // afiliacao: form.get('afiliacao')!.toString(),
+        afiliacao: form.get('afiliacao'),
         dataNascimento: form.get('dataNascimento'),
         telefone: form.get('telefone'),
       };
+      console.log(user);
 
-      await fetch('http://localhost:8081/usuarios', {
+      await fetch('http://localhost:8081/leitores', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {
@@ -44,7 +44,7 @@ export default function ModalUser({ isOpen, onClose }: any) {
         },
       })
 
-      console.log(user);
+      // console.log(user);
       route.push('/system/users')
 
     } catch (e) {
@@ -86,17 +86,14 @@ export default function ModalUser({ isOpen, onClose }: any) {
                     variant="bordered"
                     name="email"
                   />
-                  {/* Affiliation Select */}
-                  {/* <select
+                  {/* Affiliation Input */}
+                  <Input
+                    autoFocus
                     label="Afiliação"
-                    required
-                    options={[
-                      { value: "Filho", label: "Filho" },
-                      { value: "Pai", label: "Pai" },
-                      { value: "Mãe", label: "Mãe" },
-                      { value: "Outro", label: "Outro" },
-                    ]}
-                  /> */}
+                    // placeholder="leitor@gmail.com"
+                    variant="bordered"
+                    name="afiliacao"
+                  />
                   {/* Date of Birth Input */}
                   <Input label="Data Nascimento" variant="bordered" type="date" name="dataNascimento" />
                   {/* Phone Number Input */}
