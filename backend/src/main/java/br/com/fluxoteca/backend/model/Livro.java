@@ -38,6 +38,7 @@ public class Livro {
     private LocalDate dataModificacao;
 
     public Livro() {
+        this.setExemplares(exemplares);
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = LocalDate.now();
         this.status = true;

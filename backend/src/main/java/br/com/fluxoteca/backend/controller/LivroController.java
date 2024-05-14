@@ -46,7 +46,7 @@ public class LivroController {
     public ResponseEntity<LivroResponseDto> criar(@RequestBody @Valid CriacaoLivroDto data, UriComponentsBuilder uriBuilder){
         Livro livro = new Livro();
 
-        if(!autorRepository.existsById(data.autor()) || !livroRepository.existsById(data.categoria()))
+        if(!autorRepository.existsById(data.autor()) || !categoriaRepository.existsById(data.categoria()))
             return ResponseEntity.notFound().build();
 
         var categoria = categoriaRepository.getReferenceById(data.categoria());
