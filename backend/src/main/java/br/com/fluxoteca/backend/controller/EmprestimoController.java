@@ -109,4 +109,12 @@ public class EmprestimoController {
         emprestimo.ativar();
     }
 
+    @PutMapping("/validar")
+    @Transactional
+    @Operation(summary = "Valida o empréstimo com base na data de devolução")
+    public ResponseEntity<Void> validaemprestimos (){
+        emprestimoRepository.findByStatus(true).stream().forEach((emprestimo) -> { emprestimo.atualizarEstado(); });
+        return ResponseEntity.ok().build();
+    }
+
 }
