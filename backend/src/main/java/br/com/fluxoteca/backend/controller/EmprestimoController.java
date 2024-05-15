@@ -1,6 +1,5 @@
 package br.com.fluxoteca.backend.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,6 @@ public class EmprestimoController {
 
         if(!livroRepository.existsById(data.livro()) || !leitorRepository.existsById(data.leitor()))
             return ResponseEntity.notFound().build();
-
-        if(data.dataDevolucao().isBefore(LocalDate.now()))
-            return ResponseEntity.badRequest().build();
 
         var livro = livroRepository.getReferenceById(data.livro());
         var leitor = leitorRepository.getReferenceById(data.leitor());
