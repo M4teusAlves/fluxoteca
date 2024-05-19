@@ -18,7 +18,7 @@ import {
 } from "@nextui-org/react";
 import {PlusIcon} from "./PlusIcon";
 import {SearchIcon} from "./SearchIcon";
-import {columns, fetchUsers, statusOptions} from "./databooks";
+import {columns, fetchUsers, statusOptions} from "./dataregistro";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
@@ -27,21 +27,21 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 
 import { useDisclosure } from "@nextui-org/react"; // Import useDisclosure
-import ModalUser from "../modal/ModalBooks";
+import ModalUser from "../modal/ModalRegistro";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id", "nome","categoria", "autor", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id", "nomelivro","nomeusuario", "dataent", "actions"];
 
 type User = {
   id: number,
-  nome: string,
-  categoria: string,
-  autor: string,
-  tipo?: "LIVRO",
+  nomelivro: string,
+  nomeusuario: string,
+  dataent: Date,
+  tipo?: "REGISTRO",
 }
 
 export default function TableUser() {
@@ -114,12 +114,12 @@ export default function TableUser() {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.nome.toLowerCase().includes(filterValue.toLowerCase()),
+        user.nomelivro.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.autor),
+        Array.from(statusFilter).includes(user.nomeusuario),
       );
     }
 
@@ -150,11 +150,11 @@ export default function TableUser() {
 
     switch (columnKey) {
       case "name":
-        return (<span>{user.nome}</span>);
+        return (<span>{user.nomelivro}</span>);
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[user.autor]} size="sm" variant="flat">
-            {user.autor}
+          <Chip className="capitalize" color={statusColorMap[user.nomeusuario]} size="sm" variant="flat">
+            {user.nomeusuario}
           </Chip>
         );
       case "actions":
@@ -203,19 +203,32 @@ export default function TableUser() {
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
+
+            <div className="flex gap-3"    >
+
+            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
+            Renovar Registro
+            </Button>
+
+            </div>
+
           <div className="flex gap-3">
 
             {/* {showModal && <ModalUser isOpen={showModal} />} // Conditional rendering of ModalUser */}
             {/* <ModalUser isOpen={showModal}/> */}
             {/* <button onClick={handleClick}>Adicionar Leitor</button> */}
             <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
-              Adicionar Livro
+              Adicionar Registro
             </Button>
             
           </div>
+          
+
+
         </div>
+
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} livros</span>
+          <span className="text-default-400 text-small">Total {users.length} registros</span>
           <label className="flex items-center text-default-400 text-small">
             Linhas por página:
             <select
@@ -284,7 +297,7 @@ export default function TableUser() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"Nenhum livro encontrado"} items={sortedItems}>
+        <TableBody emptyContent={"Nenhum Registro encontrado"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

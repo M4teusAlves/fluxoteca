@@ -1,5 +1,9 @@
-export default function Registers() {
+import  TableRegistro  from '../../../components/table/TableRegistro'
+
+export default function Registro() {
     return (
-        <h1>Registros</h1>
+        <>
+            <TableRegistro/>
+        </>
     )
 }
