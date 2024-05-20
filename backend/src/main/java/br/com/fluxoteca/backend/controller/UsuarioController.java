@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="Usuários")
 public class UsuarioController {
     
@@ -69,12 +71,27 @@ public class UsuarioController {
         return ResponseEntity.ok(usuariosList);
     }
 
+    @GetMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Busca um usuario por id")
+    public ResponseEntity<UsuarioResponseDto> buscaPorId(@PathVariable Long id) {
+
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+
+
+        return  ResponseEntity.ok(new UsuarioResponseDto(usuario));
+
+    }
+
     @PutMapping
     @Transactional
     @Operation(summary = "Atualiza um usuário")
     public ResponseEntity<UsuarioResponseDto> atualizar(@RequestBody @Valid AtualizacaoUsuarioDto data){
         var usuario = usuarioRepository.getReferenceById(data.id());
         usuario.atualizarInformacao(data);
+
+        if(!data.senha().isEmpty())
+            usuario.setSenha(passwordEncryptionService.encryptPassword(data.senha()));
 
         return ResponseEntity.ok(new UsuarioResponseDto(usuario));
 
@@ -92,8 +109,10 @@ public class UsuarioController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um usuário")
-    public void reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable Long id){
         var usuario = usuarioRepository.getReferenceById(id);
         usuario.ativar();
+
+        return ResponseEntity.noContent().build();
     }
 }

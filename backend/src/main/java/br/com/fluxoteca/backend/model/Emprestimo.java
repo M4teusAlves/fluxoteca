@@ -26,7 +26,7 @@ public class Emprestimo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private Livro livro;
+    private Exemplar exemplar;
     @ManyToOne
     private Leitor leitor;
     private LocalDate dataDevolucao;

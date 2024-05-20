@@ -7,9 +7,10 @@ public record AtualizacaoLivroDto(
 
     @NotNull
     Long id,
-    @Size(max = 90)
-    String nome
-
+    @Size(min = 3, max = 90)
+    String nome,
+    Long categoria,
+    Long autor
 ) {
     
 }

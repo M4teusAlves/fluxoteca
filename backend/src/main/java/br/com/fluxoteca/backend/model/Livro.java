@@ -27,11 +27,11 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Autor autor;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Categoria categoria;
-    @OneToMany
+    @OneToMany(mappedBy = "livro", fetch = FetchType.EAGER)
     private List<Exemplar> exemplares;
     private boolean status;
     private LocalDate dataCriacao;

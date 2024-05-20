@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public record AtualizacaoExemplarDto(
     @NotNull
     Long id,
-    @Size(max = 70)
+    @Size(min = 3, max = 40)
     String localizacao
 ) {
     

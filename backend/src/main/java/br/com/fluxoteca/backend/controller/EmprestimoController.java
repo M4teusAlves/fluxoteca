@@ -1,9 +1,11 @@
 package br.com.fluxoteca.backend.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +20,10 @@ import br.com.fluxoteca.backend.dto.Emprestimo.AtualizacaoEmprestimoDto;
 import br.com.fluxoteca.backend.dto.Emprestimo.CriacaoEmprestimoDto;
 import br.com.fluxoteca.backend.dto.Emprestimo.EmprestimoResponseDto;
 import br.com.fluxoteca.backend.model.Emprestimo;
+import br.com.fluxoteca.backend.model.enums.Estado;
 import br.com.fluxoteca.backend.repository.EmprestimoRepository;
+import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
-import br.com.fluxoteca.backend.repository.LivroRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -30,6 +33,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/emprestimos")
+@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="Empréstimos")
 public class EmprestimoController {
     
@@ -37,7 +41,7 @@ public class EmprestimoController {
     private EmprestimoRepository emprestimoRepository;
 
     @Autowired
-    private LivroRepository livroRepository;
+    private ExemplarRepository exemplarRepository;
 
     @Autowired
     private LeitorRepository leitorRepository;
@@ -49,13 +53,16 @@ public class EmprestimoController {
     public ResponseEntity<EmprestimoResponseDto> criar(@RequestBody @Valid CriacaoEmprestimoDto data, UriComponentsBuilder uriBuilder){
         Emprestimo emprestimo = new Emprestimo();
 
-        if(!livroRepository.existsById(data.livro()) || !leitorRepository.existsById(data.leitor()))
+        if(!exemplarRepository.existsById(data.exemplar()) || !leitorRepository.existsById(data.leitor()))
             return ResponseEntity.notFound().build();
 
-        var livro = livroRepository.getReferenceById(data.livro());
+        var exemplar = exemplarRepository.getReferenceById(data.exemplar());
         var leitor = leitorRepository.getReferenceById(data.leitor());
 
-        emprestimo.setLivro(livro);
+        exemplar.setEstado(Estado.EMPRESTADO);
+        exemplar.setDataModificacao(LocalDate.now());
+
+        emprestimo.setExemplar(exemplar);
 
         emprestimo.setLeitor(leitor);
 
@@ -74,7 +81,19 @@ public class EmprestimoController {
 
         var emprestimosList = emprestimoRepository.findAll().stream().map(EmprestimoResponseDto::new).toList();
 
+
         return ResponseEntity.ok(emprestimosList);
+    }
+
+    @GetMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Busca um empréstimo por id")
+    public ResponseEntity<EmprestimoResponseDto> buscaPorId(@PathVariable Long id) {
+
+        Emprestimo empréstimo = emprestimoRepository.getReferenceById(id);
+
+        return  ResponseEntity.ok(new EmprestimoResponseDto(empréstimo));
+
     }
 
     @PutMapping
@@ -82,6 +101,30 @@ public class EmprestimoController {
     @Operation(summary = "Atualiza um empréstimo")
     public ResponseEntity<EmprestimoResponseDto> atualizar(@RequestBody @Valid AtualizacaoEmprestimoDto data){
         var emprestimo = emprestimoRepository.getReferenceById(data.id());
+
+        if(data.leitor() !=null){
+            if (leitorRepository.existsById(data.leitor())) {
+                emprestimo.setLeitor(leitorRepository.getReferenceById(data.leitor()));
+                emprestimo.setDataModificacao(LocalDate.now());
+            }else
+                return ResponseEntity.notFound().build();
+        }
+
+        if(data.exemplar() !=null){
+            if (exemplarRepository.existsById(data.exemplar())) {
+                var exemplar = exemplarRepository.getReferenceById(data.exemplar());
+                var exemplarAntigo = exemplarRepository.getReferenceById(emprestimo.getExemplar().getId());
+                emprestimo.setExemplar(exemplar);
+                emprestimo.setDataModificacao(LocalDate.now());
+                exemplarAntigo.setEstado(Estado.DISPONIVEL);
+                exemplarAntigo.setDataModificacao(LocalDate.now());
+                exemplar.setEstado(Estado.EMPRESTADO);
+                exemplar.setDataModificacao(LocalDate.now());
+
+            }else
+                return ResponseEntity.notFound().build();
+        }
+
         emprestimo.atualizarInformacao(data);
 
         return ResponseEntity.ok(new EmprestimoResponseDto(emprestimo));
@@ -100,9 +143,10 @@ public class EmprestimoController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um empréstimo")
-    public void reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable Long id){
         var emprestimo = emprestimoRepository.getReferenceById(id);
         emprestimo.ativar();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/validar")

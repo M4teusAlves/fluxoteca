@@ -6,9 +6,9 @@ import jakarta.validation.constraints.Size;
 public record AtualizacaoUsuarioDto(
     @NotNull
     Long id,
-    @Size(max = 20)
+    @Size(min = 3, max = 20)
     String login,
-    @Size(max = 15)
+    @Size(min = 8, max = 15)
     String senha
 ) {
     
