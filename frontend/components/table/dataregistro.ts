@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 // import { useJwtToken } from "@/hooks/useJwtToken";
 
@@ -23,16 +22,37 @@ async function fetchUsers(token: any) {
       return [];
     }
 
-    const response = await fetch("http://localhost:8081/livros", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    if (!response.ok) {
-      throw new Error("Falha ao obter registros");
-    }
-    const data = await response.json();
-    const users = data; // Assuming your API response is an array of user objects
+    // Replace this with your actual data
+    const users = [
+      {
+       id: 1,
+       nomelivro: "Livro Teste",
+       nomeusuario: "Paulo Eduardo",
+       dataent: "14/02/2024",
+   
+      },
+      {
+        id: 2,
+        nomelivro: "Livro Real",
+        nomeusuario: "Simas T. Silva",
+        dataent: "15/02/2024",
+    
+       },
+       {
+        id: 3,
+        nomelivro: "Turbulencias",
+        nomeusuario: "João Real",
+        dataent: "14/05/2024",
+    
+       },
+       {
+        id: 4,
+        nomelivro: "Perdão",
+        nomeusuario: "Maria Traíra",
+        dataent: "14/02/2022",
+    
+       },
+    ];
     
     return users;
   } catch (error) {

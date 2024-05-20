@@ -28,6 +28,7 @@ import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 
 import { useDisclosure } from "@nextui-org/react"; // Import useDisclosure
 import ModalUser from "../modal/ModalRegistro";
+import ModalRenovar from "../modal/ModalRenovar"; // Import ModalRenovar
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -45,11 +46,8 @@ type User = {
 }
 
 export default function TableUser() {
-  
-
   const token = useJwtToken();
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
-  // const [isLoading, setIsLoading] = useState(false); // State for loading indicator
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -71,22 +69,26 @@ export default function TableUser() {
 
   const [showModal, setShowModal] = useState(false);
   const { isOpen, onOpen } = useDisclosure(); // Use useDisclosure
-  // console.log(isOpen)
 
   const handleClick = () => {
-    // onOpenChange(); // Open the modal on button click
-    // onOpen();
-    // console.log(isOpen)
     setShowModal(true);
-    // console.log(showModal);
   };
-
-  // const handleOpenChange = (newValue: boolean) => {
-  //   onOpenChange(newValue); // Update the isOpen state in TableUser
-  // };
 
   const handleClose = () => {
     setShowModal(false); // Update modal visibility state when clicked
+  };
+
+  const [showRenovarModal, setShowRenovarModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const handleRenovarClick = (user: User) => {
+    setSelectedUser(user);
+    setShowRenovarModal(true);
+  };
+
+  const handleRenovarClose = () => {
+    setShowRenovarModal(false);
+    setSelectedUser(null);
   };
 
   const [filterValue, setFilterValue] = useState("");
@@ -160,10 +162,12 @@ export default function TableUser() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-                <Button isIconOnly size="sm" variant="bordered">
-                  <VisibilityOutlinedIcon className="text-[#7B6ED6]"/>
-                  {/* <ModeEditOutlinedIcon className="text-[#7B6ED6]"/> */}
-                </Button>
+            <Button isIconOnly size="sm" variant="bordered">
+              <VisibilityOutlinedIcon className="text-[#7B6ED6]"/>
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" onPress={() => handleRenovarClick(user)}>
+              <ModeEditOutlinedIcon className="text-[#7B6ED6]"/>
+            </Button>
           </div>
         );
       default:
@@ -204,27 +208,11 @@ export default function TableUser() {
             onValueChange={onSearchChange}
           />
 
-            <div className="flex gap-3"    >
-
-            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
-            Renovar Registro
-            </Button>
-
-            </div>
-
           <div className="flex gap-3">
-
-            {/* {showModal && <ModalUser isOpen={showModal} />} // Conditional rendering of ModalUser */}
-            {/* <ModalUser isOpen={showModal}/> */}
-            {/* <button onClick={handleClick}>Adicionar Leitor</button> */}
             <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
               Adicionar Registro
             </Button>
-            
           </div>
-          
-
-
         </div>
 
         <div className="flex justify-between items-center">
@@ -306,7 +294,11 @@ export default function TableUser() {
         </TableBody>
       </Table>
       {/* Conditionally render ModalUser component */}
-      {showModal && <ModalUser isOpen={showModal} onClose={() => setShowModal(false)} />}
+      {showModal && <ModalUser isOpen={showModal} onClose={handleClose} />}
+      {/* Conditionally render ModalRenovar component */}
+      {showRenovarModal && selectedUser && (
+        <ModalRenovar isOpen={showRenovarModal} user={selectedUser} onClose={handleRenovarClose} />
+      )}
     </>
   );
 }

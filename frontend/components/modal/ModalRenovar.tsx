@@ -6,9 +6,7 @@ import { MailIcon } from './MailIcon.jsx';
 
 import { User } from "@/lib/types.js";
 import { useJwtToken } from "@/hooks/useJwtToken";
-// import { handleAddUser } from "@/app/system/users/postUser";
-
-export default function ModalUser({ isOpen, onClose }: any) {
+export default function ModalRenovar({ isOpen, onClose }: any) {
 
   const handleClose = () => {
     onClose();
@@ -26,9 +24,7 @@ export default function ModalUser({ isOpen, onClose }: any) {
       }
 
       const user = {
-        nome: form.get('nome'),
-        categoria: form.get('categoria'),
-        autor: form.get('autor'),
+        dataent: form.get('dataent'),
  
       };
       console.log(user);
@@ -57,39 +53,15 @@ export default function ModalUser({ isOpen, onClose }: any) {
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1 text-lg">Cadastro de Registro</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1 text-lg">Renovar</ModalHeader>
                 <ModalBody>
 
-                  {/* Name Input */}
                   <Input
-                    label="Nome do livro"
-                    type="text"
-                    placeholder="Digite o nome do livro"
-                    variant="bordered"
-                    name="nome"
-                  />
-                  {/* Address Input */}
-                  <Input
-                    label="Nome do Usuário"
-                    type="text"
-                    placeholder="Digite o nome do Usuário"
-                    variant="bordered"
-                    name="categoria"
-                  />
-                  {/* Email Input */}
-                  <Input
-                        label="Data do Emprestimo"
+                        label="Nova Data de Devolução"
                         type="Date"
-                        placeholder="Digite o autor do livro"
+                        placeholder="Digite a data"
                         variant="bordered"
-                        name="autor"
-                  />
-                  <Input
-                        label="Data de Devolução"
-                        type="Date"
-                        placeholder="Digite o autor do livro"
-                        variant="bordered"
-                        name="autor"
+                        name="dataent"
                   />
 
   
@@ -100,7 +72,7 @@ export default function ModalUser({ isOpen, onClose }: any) {
                     Cancelar
                   </Button>
                   <Button color="primary" type="submit">
-                    Cadastrar
+                    Renovar
                   </Button>
 
                 </ModalFooter>
