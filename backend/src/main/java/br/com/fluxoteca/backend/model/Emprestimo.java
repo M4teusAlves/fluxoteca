@@ -45,6 +45,15 @@ public class Emprestimo {
 
     public void atualizarInformacao(@Valid AtualizacaoEmprestimoDto data){
             
+        if(data.dataDevolucao() != null){
+            this.dataDevolucao = data.dataDevolucao();
+            this.dataModificacao = LocalDate.now();    
+        }
+
+        if(data.estado() != null){
+            this.estado = data.estado();
+            this.dataModificacao = LocalDate.now();
+        }
         
     }
 
