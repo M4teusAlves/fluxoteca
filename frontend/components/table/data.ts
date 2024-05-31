@@ -1,13 +1,10 @@
 
-import React, { useState, useEffect } from "react";
-// import { useJwtToken } from "@/hooks/useJwtToken";
-
 const columns = [
-  {name: "ID", uid: "id", sortable: true},
+  // {name: "ID", uid: "id", sortable: true},
   {name: "NOME", uid: "name", sortable: true},
   {name: "TELEFONE", uid: "fone", sortable: true},
   {name: "EMAIL", uid: "email"},
-  {name: "STATUS", uid: "status", sortable: true},
+  // {name: "STATUS", uid: "status", sortable: true},
   {name: "", uid: "actions"},
 ];
 

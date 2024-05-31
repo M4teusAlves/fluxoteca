@@ -16,25 +16,22 @@ import {
   ChipProps,
   SortDescriptor
 } from "@nextui-org/react";
-import {PlusIcon} from "./PlusIcon";
-import {SearchIcon} from "./SearchIcon";
-import {columns, fetchUsers, statusOptions} from "./data";
+import { PlusIcon } from "./PlusIcon";
+import { SearchIcon } from "./SearchIcon";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { columns, fetchUsers, statusOptions } from "./data";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
-
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
-
-import { useDisclosure } from "@nextui-org/react"; // Import useDisclosure
-import ModalUser from "../modal/ModalUser";
+import ModalAddUser from "../modal/user/ModalAddUser";
+import ModalEditUser from "../modal/user/ModalEditUser";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id", "name", "fone", "email", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "fone", "email", "actions"];
 
 type User = {
   id: number,
@@ -49,11 +46,9 @@ type User = {
 }
 
 export default function TableUser() {
-  
 
   const token = useJwtToken();
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
-  // const [isLoading, setIsLoading] = useState(false); // State for loading indicator
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -71,27 +66,18 @@ export default function TableUser() {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, isLoading]);
 
-  const [showModal, setShowModal] = useState(false);
-  const { isOpen, onOpen } = useDisclosure(); // Use useDisclosure
-  // console.log(isOpen)
+  const [showModalAddUser, setShowModalAddUser] = useState(false);
+  const [showModalEditUser, setShowModalEditUser] = useState(false);
 
-  const handleClick = () => {
-    // onOpenChange(); // Open the modal on button click
-    // onOpen();
-    // console.log(isOpen)
-    setShowModal(true);
-    // console.log(showModal);
+  const handleClickAddUser = () => {
+    setShowModalAddUser(true);
   };
 
-  // const handleOpenChange = (newValue: boolean) => {
-  //   onOpenChange(newValue); // Update the isOpen state in TableUser
-  // };
-
-  const handleClose = () => {
-    setShowModal(false); // Update modal visibility state when clicked
-  };
+  const handleClickEditUser = () => {
+    setShowModalEditUser(true)
+  }
 
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -155,19 +141,14 @@ export default function TableUser() {
     switch (columnKey) {
       case "name":
         return (<span>{user.nome}</span>);
-      case "status":
-        return (
-          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-            {user.status}
-          </Chip>
-        );
+      case "fone":
+        return (<span>{user.telefone}</span>);
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-                <Button isIconOnly size="sm" variant="bordered">
-                  <VisibilityOutlinedIcon className="text-[#7B6ED6]"/>
-                  {/* <ModeEditOutlinedIcon className="text-[#7B6ED6]"/> */}
-                </Button>
+            <Button isIconOnly size="sm" variant="bordered" onPress={handleClickEditUser}>
+              <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
+            </Button>
           </div>
         );
       default:
@@ -189,10 +170,10 @@ export default function TableUser() {
     }
   }, []);
 
-  const onClear = React.useCallback(()=>{
+  const onClear = React.useCallback(() => {
     setFilterValue("")
     setPage(1)
-  },[])
+  }, [])
 
   const topContent = React.useMemo(() => {
     return (
@@ -208,14 +189,9 @@ export default function TableUser() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-
-            {/* {showModal && <ModalUser isOpen={showModal} />} // Conditional rendering of ModalUser */}
-            {/* <ModalUser isOpen={showModal}/> */}
-            {/* <button onClick={handleClick}>Adicionar Leitor</button> */}
-            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClick}>
+            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddUser}>
               Adicionar Leitor
             </Button>
-            
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -296,8 +272,16 @@ export default function TableUser() {
           )}
         </TableBody>
       </Table>
-      {/* Conditionally render ModalUser component */}
-      {showModal && <ModalUser isOpen={showModal} onClose={() => setShowModal(false)} />}
+      {/* Condicional para mostrar modal de adicionar leitor */}
+      {showModalAddUser && <ModalAddUser isOpen={showModalAddUser} onClose={() => {
+        setShowModalAddUser(false)
+        setIsLoading(true);
+      }} />}
+      {/* Condicional para mostrar modal de editar dados do leitor */}
+      {showModalEditUser && <ModalEditUser isOpen={showModalEditUser} onClose={() => {
+        setShowModalEditUser(false)
+        setIsLoading(true);
+      }} />}
     </>
   );
 }
