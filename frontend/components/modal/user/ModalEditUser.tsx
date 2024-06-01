@@ -1,17 +1,18 @@
 
 import React, { useRef } from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 
 export default function ModalEditUser({ isOpen, onClose, userID }: any) {
   const formRef = useRef<HTMLFormElement>(null);
   const [showMessage, setShowMessage] = useState(false);
-  const messageConfirmation = 'Cadastrado com sucesso.'
+  const messageConfirmation = 'Dados atualizados com sucesso.'
   const [errors, setErrors] = useState<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>({});
 
   const [phoneNumber, setPhoneNumber] = useState('');
-    
+  const [userData, setUserData] = useState<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>({});
+
   // Get token
   const token = useJwtToken();
 
@@ -71,8 +72,9 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
     onClose();
   };
 
-  // GET user
-  async function handleGetUser(form: FormData) {
+
+  // Update (PUT) user
+  async function handleUpdateUser(form: FormData) {
 
     try {
       if (!token) {
@@ -85,6 +87,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
       }
 
       const user = {
+        id: userID,
         nome: form.get('nome'),
         endereco: form.get('endereco'),
         email: form.get('email'),
@@ -93,32 +96,55 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
         telefone: form.get('telefone'),
       };
 
-      const res = await fetch(`http://localhost:8081/leitores/${userID}`, {
-        method: 'GET',
+      const userJSON = JSON.stringify(user);
+
+      const res = await fetch(`http://localhost:8081/leitores/`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
+        body: userJSON,
       })
 
-      const data = await res.json();
-      // if (res.ok) {
-      //   setShowMessage(true)
-      //   formRef.current?.reset();
-      //   setTimeout(() => setShowMessage(false), 3000)
-      // }
-
-      return data;
+      if (res.ok) {
+        setShowMessage(true)
+        setTimeout(() => setShowMessage(false), 3000)
+      }
 
     } catch (e) {
-      console.error('Erro ao obter usuário:', e)
+      console.error('Erro ao atualizar dados do usuário:', e)
     }
   }
 
+  // Read (GET) user
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        if (token) { // Check if token is valid before fetching data
+          const res = await fetch(`http://localhost:8081/leitores/${userID}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          setUserData(data);
+        }
+      } catch (e) {
+        console.error('Erro ao obter usuário:', e)
+      }
+
+    }
+  
+    fetchUserData();
+  }, [userID, token]); // Fetch data when userID or token changes
+  
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center" isDismissable={false} isKeyboardDismissDisabled={true}>
-        <form action={handleGetUser} method="post" ref={formRef}>
+        <form action={handleUpdateUser} method="put" ref={formRef}>
           <ModalContent>
             {(onClose) => (
               <>
@@ -131,18 +157,20 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   <div> {/* Name Input */}
                     {errors.nome && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.nome}</p>}
                     <Input
-                      autoFocus
+                      value={userData.nome}
                       label="Nome"
                       type="text"
                       placeholder="Digite o nome"
                       variant="bordered"
                       name="nome"
+                      onChange={(e) => setUserData({ ...userData, nome: e.target.value })} // Update userData on change
                     />
                   </div>
 
                   <div> {/* Address Input */}
                     {errors.endereco && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.endereco}</p>}
                     <Input
+                      value={userData.endereco}
                       label="Endereço"
                       placeholder="Digite o endereço"
                       variant="bordered"
@@ -153,6 +181,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   <div> {/* Email Input */}
                     {errors.email && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.email}</p>}
                     <Input
+                      value={userData.email}
                       label="Email"
                       placeholder="leitor@gmail.com"
                       variant="bordered"
@@ -163,6 +192,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   <div> {/* Affiliation Input */}
                     {errors.afiliacao && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.afiliacao}</p>}
                     <Input
+                      value={userData.afiliacao}
                       label="Afiliação"
                       placeholder="Digite a afiliação"
                       variant="bordered"
@@ -173,6 +203,8 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   <div> {/* Date of Birth Input */}
                     {errors.dataNascimento && <p className="text-red-500 text-xs absolute right-14 mt-7">{errors.dataNascimento}</p>}
                     <Input
+                      isReadOnly
+                      value={userData.dataNascimento}
                       label="Data Nascimento"
                       variant="bordered"
                       type="date"
@@ -183,12 +215,13 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   <div> {/* Phone Number Input */}
                     {errors.telefone && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.telefone}</p>}
                     <Input
+                      value={userData.telefone}
                       type="tel"
                       label="Telefone"
                       placeholder="(DDD) 9 xxxx - xxxx"
                       variant="bordered"
                       name="telefone"
-                      value={phoneNumber}
+                      // value={phoneNumber}
                       onChange={handlePhoneInput}
                     />
                   </div>
@@ -199,7 +232,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                     Cancelar
                   </Button>
                   <Button color="primary" type="submit">
-                    Cadastrar
+                    Atualizar
                   </Button>
 
                 </ModalFooter>
