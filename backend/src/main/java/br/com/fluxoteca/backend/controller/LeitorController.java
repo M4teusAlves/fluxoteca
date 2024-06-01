@@ -59,6 +59,18 @@ public class LeitorController {
         return ResponseEntity.ok(leitorsList);
     }
 
+    @GetMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Busca um leitor por id")
+    public ResponseEntity<LeitorResponseDto> buscaPorId(@PathVariable Long id) {
+
+        Leitor leitor = leitorRepository.getReferenceById(id);
+
+
+        return  ResponseEntity.ok(new LeitorResponseDto(leitor));
+
+    }
+
     @PutMapping
     @Transactional
     @Operation(summary = "Atualiza um leitor")
@@ -82,9 +94,10 @@ public class LeitorController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um leitor")
-    public void reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable Long id){
         var Leitor = leitorRepository.getReferenceById(id);
         Leitor.ativar();
+        return ResponseEntity.noContent().build();
     }
 
 }

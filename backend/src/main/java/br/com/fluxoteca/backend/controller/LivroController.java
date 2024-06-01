@@ -1,9 +1,11 @@
 package br.com.fluxoteca.backend.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/livros")
+@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="Livros")
 public class LivroController {
     
@@ -46,7 +49,7 @@ public class LivroController {
     public ResponseEntity<LivroResponseDto> criar(@RequestBody @Valid CriacaoLivroDto data, UriComponentsBuilder uriBuilder){
         Livro livro = new Livro();
 
-        if(!autorRepository.existsById(data.autor()) || !livroRepository.existsById(data.categoria()))
+        if(!autorRepository.existsById(data.autor()) || !categoriaRepository.existsById(data.categoria()))
             return ResponseEntity.notFound().build();
 
         var categoria = categoriaRepository.getReferenceById(data.categoria());
@@ -74,11 +77,42 @@ public class LivroController {
         return ResponseEntity.ok(livrosList);
     }
 
+    @GetMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Busca um Livro por id")
+    public ResponseEntity<LivroResponseDto> buscaPorId(@PathVariable Long id) {
+
+        Livro livro = livroRepository.getReferenceById(id);
+
+
+        return  ResponseEntity.ok(new LivroResponseDto(livro));
+
+    }
+
     @PutMapping
     @Transactional
     @Operation(summary = "Atualiza um livro")
     public ResponseEntity<LivroResponseDto> atualizar(@RequestBody @Valid AtualizacaoLivroDto data){
         var livro = livroRepository.getReferenceById(data.id());
+
+        if(data.autor() != null){
+            if(autorRepository.existsById(data.autor())){
+                livro.setAutor(autorRepository.getReferenceById(data.autor()));
+                livro.setDataModificacao(LocalDate.now());
+            }   
+            else
+                return ResponseEntity.notFound().build();
+        }
+
+        if( data.categoria() != null){
+            if(categoriaRepository.existsById(data.categoria())){
+                livro.setCategoria(categoriaRepository.getReferenceById(data.categoria()));
+                livro.setDataModificacao(LocalDate.now());
+            }     
+            else
+                return ResponseEntity.notFound().build();    
+        }
+
         livro.atualizarInformacao(data);
 
         return ResponseEntity.ok(new LivroResponseDto(livro));
@@ -97,9 +131,11 @@ public class LivroController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um livro")
-    public void reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable Long id){
         var livro = livroRepository.getReferenceById(id);
         livro.ativar();
+
+        return ResponseEntity.noContent().build();
     }
 
 }

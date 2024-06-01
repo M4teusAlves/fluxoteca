@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
+
 @RestController
 @RequestMapping("/autores")
+@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="Autores")
 public class AutorController {
     
@@ -42,7 +45,7 @@ public class AutorController {
 
         autorRepository.save(autor);
 
-        var uri = uriBuilder.path("Autors/{id}").buildAndExpand(autor.getId()).toUri();
+        var uri = uriBuilder.path("autores/{id}").buildAndExpand(autor.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new AutorResponseDto(autor));
     }
@@ -55,6 +58,19 @@ public class AutorController {
 
         return ResponseEntity.ok(AutorsList);
     }
+
+    @GetMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Busca um autor por id")
+    public ResponseEntity<AutorResponseDto> buscaPorId(@PathVariable Long id) {
+
+        Autor autor = autorRepository.getReferenceById(id);
+
+
+        return  ResponseEntity.ok(new AutorResponseDto(autor));
+
+    }
+    
 
     @PutMapping
     @Transactional
@@ -79,9 +95,11 @@ public class AutorController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um autor")
-    public void reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable Long id){
         var Autor = autorRepository.getReferenceById(id);
         Autor.ativar();
+
+        return ResponseEntity.noContent().build();
     }
 
 }

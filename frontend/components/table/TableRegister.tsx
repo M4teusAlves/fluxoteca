@@ -19,11 +19,11 @@ import {
 import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { columns, fetchUsers, statusOptions } from "./databook";
+import { columns, fetchUsers, statusOptions } from "./dataregister";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
-import ModalBooks from "../modal/book/ModalBooks";
+import ModalRegister from "../modal/registers/ModalRegisters";
 import ModalEditUser from "../modal/user/ModalEditUser";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -31,14 +31,14 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "categoria", "autor", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "livro", "dataentrega", "actions"];
 
 type User = {
   id: number,
   nome: string,
   autor: string,
   categoria: string,
-  tipo?: "LIVRO",
+  tipo?: "REGISTRO",
   status: string
 }
 
@@ -66,11 +66,11 @@ export default function TableUser() {
     fetchData();
   }, [token, isLoading]);
 
-  const [showModalBooks, setShowModalBooks] = useState(false);
+  const [showModalRegister, setShowModalRegister] = useState(false);
   const [showModalEditUser, setShowModalEditUser] = useState(false);
 
   const handleClickAddUser = () => {
-    setShowModalBooks(true);
+    setShowModalRegister(true);
   };
 
   const handleClickEditUser = () => {
@@ -191,12 +191,12 @@ export default function TableUser() {
           />
           <div className="flex gap-3">
             <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddUser}>
-              Adicionar Livro
+              Adicionar Registro
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} livros</span>
+          <span className="text-default-400 text-small">Total {users.length} registros</span>
           <label className="flex items-center text-default-400 text-small">
             Linhas por página:
             <select
@@ -265,7 +265,7 @@ export default function TableUser() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"Nenhum livro encontrado"} items={sortedItems}>
+        <TableBody emptyContent={"Nenhum registro encontrado"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
@@ -274,8 +274,8 @@ export default function TableUser() {
         </TableBody>
       </Table>
       {/* Condicional para mostrar modal de adicionar leitor */}
-      {showModalBooks && <ModalBooks isOpen={showModalBooks} onClose={() => {
-        setShowModalBooks(false)
+      {showModalRegister && <ModalRegister isOpen={showModalRegister} onClose={() => {
+        setShowModalRegister(false)
         setIsLoading(true);
       }} />}
       {/* Condicional para mostrar modal de editar dados do leitor */}
