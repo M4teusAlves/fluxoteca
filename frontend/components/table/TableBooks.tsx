@@ -23,7 +23,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 
-import ModalUser from "../modal/ModalUser";
+import ModalUser from "../modal/user/ModalAddUser";
 
 export default function TableBooks() {
 
