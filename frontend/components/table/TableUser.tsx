@@ -50,6 +50,7 @@ export default function TableUser() {
   const token = useJwtToken();
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
   const [isLoading, setIsLoading] = useState(false);
+  const [currentUserID, setCurrentUserID] = useState(0)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -146,7 +147,10 @@ export default function TableUser() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly size="sm" variant="bordered" onPress={handleClickEditUser}>
+            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+              setCurrentUserID(user.id)
+              handleClickEditUser()
+            }}>
               <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
             </Button>
           </div>
@@ -246,7 +250,7 @@ export default function TableUser() {
         bottomContentPlacement="outside"
         classNames={{ wrapper: "h-[calc(100vh-192px)]" }}
         selectedKeys={selectedKeys}
-        selectionMode="multiple"
+        // selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
@@ -281,7 +285,7 @@ export default function TableUser() {
       {showModalEditUser && <ModalEditUser isOpen={showModalEditUser} onClose={() => {
         setShowModalEditUser(false)
         setIsLoading(true);
-      }} />}
+      }} userID={currentUserID}/>}
     </>
   );
 }
