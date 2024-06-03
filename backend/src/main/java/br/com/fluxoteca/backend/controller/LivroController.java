@@ -1,6 +1,7 @@
 package br.com.fluxoteca.backend.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.fluxoteca.backend.dto.Livro.AtualizacaoLivroDto;
 import br.com.fluxoteca.backend.dto.Livro.CriacaoLivroDto;
 import br.com.fluxoteca.backend.dto.Livro.LivroResponseDto;
+import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.model.Livro;
 import br.com.fluxoteca.backend.repository.AutorRepository;
 import br.com.fluxoteca.backend.repository.CategoriaRepository;
@@ -60,6 +62,8 @@ public class LivroController {
         livro.setAutor(autor);
 
         livro.setCategoria(categoria);
+
+        livro.setExemplares(new ArrayList<Exemplar>());
 
         livroRepository.save(livro);
 
