@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select } from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
-import ModalAddAuthor from "./ModalAutor";
-import ModalAddCategory from "./ModalCategoria";
+
 import { DateTime } from "next-auth/providers/kakao";
 
 export default function ModalRegister({ isOpen, onClose }: any) {
@@ -12,8 +11,6 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const [errors, setErrors] = useState<{ nomeLeitor?: string, nomeLivro?: string, dataEntrega?: DateTime }>({});
   const [authors, setAuthors] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [showAddAuthorModal, setShowAddAuthorModal] = useState(false);
-  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
 
   const [name, setName] = useState('');
   const [livro, setCategory] = useState('');
@@ -136,7 +133,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                         </option>
                       ))}
                     </Select>
-                    <Button onPress={() => setShowAddAuthorModal(true)}>Adicionar Leitor</Button>
+                    
                   </div>
 
                   <div> {/* Category Input */}
@@ -154,7 +151,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                         </option>
                       ))}
                     </Select>
-                    <Button onPress={() => setShowAddCategoryModal(true)}>Adicionar Livro</Button>
+                  
                   </div>
                   
                   <div> {/* Delivery Date Input */}
@@ -183,16 +180,8 @@ export default function ModalRegister({ isOpen, onClose }: any) {
           </ModalContent>
         </form>
       </Modal>
-      {showAddAuthorModal && <ModalAddAuthor isOpen={showAddAuthorModal} onClose={() => setShowAddAuthorModal(false)} onAuthorAdded={(authorName) => {
-        setAuthors([...authors, authorName]);
-        setName(authorName);
-        setShowAddAuthorModal(false);
-      }} />}
-      {showAddCategoryModal && <ModalAddCategory isOpen={showAddCategoryModal} onClose={() => setShowAddCategoryModal(false)} onCategoryAdded={(categoryName) => {
-        setCategories([...categories, categoryName]);
-        setCategory(categoryName);
-        setShowAddCategoryModal(false);
-      }} />}
+      
+    
     </>
   );
 }
