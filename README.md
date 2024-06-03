@@ -16,6 +16,10 @@ Este é um sistema de gerenciamento de livros e leitores de biblioteca desenvolv
 - **Banco de Dados**: Postgresql
 - **Frontend**: Typescript, Nextjs
 
+## Design System
+
+- [Clique Aqui](https://big-asparagus-a33.notion.site/1e783fdc606341e0b4fe65eb1ebf6808?v=af114e501ffd404d846d5be50a6492a9&p=9ef17cafc8ad44d4bb58467e9cd9a2a9&pm=s)
+
 ## Instalação e Uso
 
 **Em breve**
