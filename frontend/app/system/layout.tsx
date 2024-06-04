@@ -5,6 +5,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import Button from '@/components/sidebar/Button';
 
 
@@ -18,6 +19,7 @@ export default function SystemLayout({ children }: Readonly<{ children: React.Re
                         <li><Button icon={<PeopleAltIcon />} textButton={'Registros'} link={"/system/registers"} /></li>
                         <li><Button icon={<LibraryBooksIcon />} textButton={'Usuários'} link={"/system/users"} /></li>
                         <li><Button icon={<AutoStoriesIcon />} textButton={'Livros'} link={"/system/books"} /></li>
+                        <li><Button icon={<AssessmentIcon/>} textButton={'Relatórios'} link={"/system/reports"}/></li>
                     </div>
                     <li><Button icon={<LogoutIcon />} textButton={'Sair'} link={"/"} /></li>
                 </ul>
