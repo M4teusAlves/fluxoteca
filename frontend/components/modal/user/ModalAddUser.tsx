@@ -175,6 +175,7 @@ export default function ModalUser({ isOpen, onClose }: any) {
                       variant="bordered"
                       type="date"
                       name="dataNascimento"
+                      placeholder="dd/mm/aaaa"
                     />
                   </div>
 

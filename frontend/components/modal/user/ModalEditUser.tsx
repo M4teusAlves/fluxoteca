@@ -6,8 +6,10 @@ import { useJwtToken } from "@/hooks/useJwtToken";
 
 export default function ModalEditUser({ isOpen, onClose, userID }: any) {
   const formRef = useRef<HTMLFormElement>(null);
+
   const [showMessage, setShowMessage] = useState(false);
   const messageConfirmation = 'Dados atualizados com sucesso.'
+
   const [errors, setErrors] = useState<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>({});
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -31,6 +33,8 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
   };
 
   const handlePhoneInput = (event: any) => {
+    setUserData({ ...userData, telefone: event.target.value })
+
     const phone = event.target.value;
     const formattedNumber = formatPhoneNumber(phone);
     setPhoneNumber(formattedNumber);
@@ -95,10 +99,11 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
         dataNascimento: form.get('dataNascimento'),
         telefone: form.get('telefone'),
       };
-
+      
       const userJSON = JSON.stringify(user);
+      console.log(userJSON)
 
-      const res = await fetch(`http://localhost:8081/leitores/`, {
+      const res = await fetch(`http://localhost:8081/leitores`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -175,6 +180,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="Digite o endereço"
                       variant="bordered"
                       name="endereco"
+                      onChange={(e) => setUserData({ ...userData, endereco: e.target.value })} 
                     />
                   </div>
 
@@ -186,6 +192,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="leitor@gmail.com"
                       variant="bordered"
                       name="email"
+                      onChange={(e) => setUserData({ ...userData, email: e.target.value })} 
                     />
                   </div>
 
@@ -197,6 +204,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="Digite a afiliação"
                       variant="bordered"
                       name="afiliacao"
+                      onChange={(e) => setUserData({ ...userData, afiliacao: e.target.value })} 
                     />
                   </div>
 
@@ -209,6 +217,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       variant="bordered"
                       type="date"
                       name="dataNascimento"
+                      onChange={(e) => setUserData({ ...userData, dataNascimento: e.target.value })} 
                     />
                   </div>
 
