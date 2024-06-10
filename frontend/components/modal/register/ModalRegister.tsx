@@ -10,7 +10,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const messageConfirmation = 'Cadastrado com sucesso.';
   const [errors, setErrors] = useState<{ nomeLeitor?: string, nomeLivro?: string, dataEntrega?: DateTime }>({});
   const [authors, setAuthors] = useState<Array<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Array<{ id: string; nome: string; categoria: string; autor: string; status: string }>>([]);
 
   const [name, setName] = useState('');
   const [livro, setCategory] = useState('');
@@ -89,12 +89,14 @@ export default function ModalRegister({ isOpen, onClose }: any) {
       }
 
       const register = {
-        nomeLeitor: name,
-        nomeLivro: livro,
+        nomeLeitor: parseInt(name),
+        nomeLivro: parseInt(livro),
         dataEntrega: deliveryDate,
       };
 
-      const res = await fetch('http://localhost:8081/registros', {
+      console.log(register)
+
+      const res = await fetch('http://localhost:8081/emprestimos', {
         method: 'POST',
         body: JSON.stringify(register),
         headers: {
@@ -158,8 +160,8 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                       onChange={(e) => setCategory(e.target.value)}
                     >
                       {categories.map((livro) => (
-                        <SelectItem key={livro} value={livro}>
-                          {livro}
+                        <SelectItem key={livro.id} value={livro.nome}>
+                          {livro.nome}
                         </SelectItem>
                       ))}
                     </Select>
