@@ -16,8 +16,8 @@ export default function SystemLayout({ children }: Readonly<{ children: React.Re
                 <Image src={logo} width={200} height={200} alt="logo fluxoteca" />
                 <ul className='flex flex-col justify-between h-[calc(100vh-248px)]'>
                     <div className='grid gap-4'>
-                        <li><Button icon={<PeopleAltIcon />} textButton={'Registros'} link={"/system/registers"} /></li>
-                        <li><Button icon={<LibraryBooksIcon />} textButton={'Usuários'} link={"/system/users"} /></li>
+                        <li><Button icon={<LibraryBooksIcon />} textButton={'Empréstimos'} link={"/system/registers"} /></li>
+                        <li><Button icon={<PeopleAltIcon />} textButton={'Leitores'} link={"/system/users"} /></li>
                         <li><Button icon={<AutoStoriesIcon />} textButton={'Livros'} link={"/system/books"} /></li>
                         <li><Button icon={<AssessmentIcon/>} textButton={'Relatórios'} link={"/system/reports"}/></li>
                     </div>
