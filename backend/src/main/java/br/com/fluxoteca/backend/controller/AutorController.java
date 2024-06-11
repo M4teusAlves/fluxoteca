@@ -25,6 +25,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -70,6 +72,16 @@ public class AutorController {
         return  ResponseEntity.ok(new AutorResponseDto(autor));
 
     }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista autores por status")
+    public ResponseEntity<List<AutorResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var AutorsList = autorRepository.findByStatus(param).stream().map(AutorResponseDto::new).toList();
+
+        return ResponseEntity.ok(AutorsList);
+    }
+    
     
 
     @PutMapping

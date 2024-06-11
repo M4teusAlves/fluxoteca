@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -69,6 +70,15 @@ public class CategoriaController {
 
         return  ResponseEntity.ok(new CategoriaResponseDto(categoria));
 
+    }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista categorias por status")
+    public ResponseEntity<List<CategoriaResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var categoriasList = categoriaRepository.findByStatus(param).stream().map(CategoriaResponseDto::new).toList();
+
+        return ResponseEntity.ok(categoriasList);
     }
 
     @PutMapping

@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import br.com.fluxoteca.backend.dto.Exemplar.AtualizacaoExemplarDto;
 import br.com.fluxoteca.backend.model.enums.Estado;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,8 +21,7 @@ import lombok.Setter;
 @Setter
 public class Exemplar {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @ManyToOne
     @JoinColumn(name = "livro_id")
     private Livro livro;

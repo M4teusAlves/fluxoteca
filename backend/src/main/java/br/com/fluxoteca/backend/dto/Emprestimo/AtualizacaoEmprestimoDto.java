@@ -15,7 +15,7 @@ public record AtualizacaoEmprestimoDto(
     @Enumerated
     EstadoEmprestimo estado,
     Long leitor,
-    Long exemplar
+    String exemplar
 ) {
     
 }

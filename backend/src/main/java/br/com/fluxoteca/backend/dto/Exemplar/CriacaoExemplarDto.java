@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CriacaoExemplarDto(
+    @NotBlank
+    String id,
     @NotNull
     Long livroId,
     @NotBlank
