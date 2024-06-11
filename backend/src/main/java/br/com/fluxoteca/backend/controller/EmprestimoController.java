@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -94,6 +95,15 @@ public class EmprestimoController {
 
         return  ResponseEntity.ok(new EmprestimoResponseDto(empréstimo));
 
+    }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista emprestimos por status")
+    public ResponseEntity<List<EmprestimoResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var emprestimosList = emprestimoRepository.findByStatus(param).stream().map(EmprestimoResponseDto::new).toList();
+
+        return ResponseEntity.ok(emprestimosList);
     }
 
     @PutMapping

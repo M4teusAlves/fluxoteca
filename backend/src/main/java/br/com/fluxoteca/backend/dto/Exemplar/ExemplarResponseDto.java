@@ -7,7 +7,7 @@ import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.model.enums.Estado;
 
 public record ExemplarResponseDto(
-    Long id,
+    String id,
     LivroLittleResponseDto livro,
     String localizacao,
     Estado estado,

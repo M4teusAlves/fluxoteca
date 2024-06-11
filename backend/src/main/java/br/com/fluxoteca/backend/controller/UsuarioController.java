@@ -27,6 +27,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -81,6 +82,15 @@ public class UsuarioController {
 
         return  ResponseEntity.ok(new UsuarioResponseDto(usuario));
 
+    }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista usuarios por status")
+    public ResponseEntity<List<UsuarioResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var usuariosList = usuarioRepository.findByStatus(param).stream().map(UsuarioResponseDto::new).toList();
+
+        return ResponseEntity.ok(usuariosList);
     }
 
     @PutMapping

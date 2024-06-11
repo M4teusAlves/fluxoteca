@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record CriacaoEmprestimoDto(
     @NotNull
-    Long exemplar,
+    String exemplar,
     @NotNull
     Long leitor,
     @NotNull

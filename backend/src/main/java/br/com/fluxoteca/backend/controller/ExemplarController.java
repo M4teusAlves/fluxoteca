@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,6 +49,11 @@ public class ExemplarController {
         if(!livroRepository.existsById(data.livroId()))
             return ResponseEntity.notFound().build();
 
+        if(exemplarRepository.existsById(data.id()))
+            return ResponseEntity.badRequest().build();
+
+        exemplar.setId(data.id());
+
         exemplar.setLivro(livroRepository.getReferenceById(data.livroId()));
 
         exemplar.setLocalizacao(data.localizacao());
@@ -71,13 +77,22 @@ public class ExemplarController {
     @GetMapping("/{id}")
     @Transactional
     @Operation(summary = "Busca um Exemplar por id")
-    public ResponseEntity<ExemplarResponseDto> buscaPorId(@PathVariable Long id) {
+    public ResponseEntity<ExemplarResponseDto> buscaPorId(@PathVariable String id) {
 
         Exemplar exemplar = exemplarRepository.getReferenceById(id);
 
 
         return  ResponseEntity.ok(new ExemplarResponseDto(exemplar));
 
+    }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista exemplares por status")
+    public ResponseEntity<List<ExemplarResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var exemplaresList = exemplarRepository.findByStatus(param).stream().map(ExemplarResponseDto::new).toList();
+
+        return ResponseEntity.ok(exemplaresList);
     }
     
 
@@ -95,7 +110,7 @@ public class ExemplarController {
     @DeleteMapping("/{id}")
     @Transactional
     @Operation(summary = "Deleta um Exemplar")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
+    public ResponseEntity<Void> deletar(@PathVariable String id){
         var exemplar = exemplarRepository.getReferenceById(id);
         exemplar.inativar();
         return ResponseEntity.noContent().build();
@@ -104,7 +119,7 @@ public class ExemplarController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um Exemplar")
-    public ResponseEntity<Void> reativar(@PathVariable Long id){
+    public ResponseEntity<Void> reativar(@PathVariable String id){
         var exemplar = exemplarRepository.getReferenceById(id);
         exemplar.ativar();
 

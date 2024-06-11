@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -69,6 +70,15 @@ public class LeitorController {
 
         return  ResponseEntity.ok(new LeitorResponseDto(leitor));
 
+    }
+
+    @GetMapping("status/{status}")
+    @Operation(summary = "Lista Leitores por status")
+    public ResponseEntity<List<LeitorResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+
+        var leitoresList = leitorRepository.findByStatus(param).stream().map(LeitorResponseDto::new).toList();
+
+        return ResponseEntity.ok(leitoresList);
     }
 
     @PutMapping
