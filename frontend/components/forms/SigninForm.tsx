@@ -49,7 +49,7 @@ export function SigninForm() {
         const token = data.token;
         localStorage.setItem('jwtToken', token)
 
-        router.push('/system/users');
+        router.push('/system/registers');
       } else {
         alert('Credenciais inválidas');
       }

@@ -15,7 +15,7 @@ const statusOptions = [
 
 async function fetchUsers(token: any) {
   try {
-    // const token = useJwtToken();
+
     if (!token) {
       alert('Token de autenticação não encontrado');
       return [];
