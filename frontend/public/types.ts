@@ -4,12 +4,26 @@ type contentReportCard = {
     content:any,
 }
 
+type exemplar = {
+    id:number,
+    livro:littleBook,
+    localizacao:string,
+    estado:string,
+    status:boolean
+}
+
+type littleBook = {
+    id:string,
+    nome:string,
+}
+
 type Book = {
     id:string,
     nome:string,
     categoria:string,
     autor: string,
-    status:boolean
+    status:boolean,
+    exemplares:exemplar[]
 }
 
 
@@ -22,8 +36,6 @@ type leitor = {
     dataNascimento:Date,
     telefone:string,
     status:boolean,
-    dataCriacao:Date,
-    dataModificacao:Date
 }
 
 type category = {

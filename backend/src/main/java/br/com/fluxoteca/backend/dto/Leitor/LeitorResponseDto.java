@@ -13,14 +13,12 @@ public record LeitorResponseDto(
     String afiliacao,
     LocalDate dataNascimento,
     String telefone,
-    boolean status,
-    LocalDate dataCriacao,
-    LocalDate dataModificacao
+    boolean status
 
 ) {
 
     public LeitorResponseDto(Leitor usuario){
-        this(usuario.getId(), usuario.getNome(), usuario.getEndereco(), usuario.getEmail(), usuario.getAfiliacao(), usuario.getDataNascimento(), usuario.getTelefone(), usuario.isStatus(), usuario.getDataCriacao(), usuario.getDataModificacao());
+        this(usuario.getId(), usuario.getNome(), usuario.getEndereco(), usuario.getEmail(), usuario.getAfiliacao(), usuario.getDataNascimento(), usuario.getTelefone(), usuario.isStatus());
     }
      
 }

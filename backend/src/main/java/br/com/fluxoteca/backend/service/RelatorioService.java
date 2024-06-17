@@ -19,7 +19,6 @@ import br.com.fluxoteca.backend.repository.LivroRepository;
 
 @Service
 public class RelatorioService {
-
     @Autowired
     LeitorRepository leitorRepository;
 
@@ -76,5 +75,4 @@ public class RelatorioService {
 
         return relatorio;
     }
-
 }
