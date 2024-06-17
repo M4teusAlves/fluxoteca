@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,7 @@ import br.com.fluxoteca.backend.dto.Emprestimo.CriacaoEmprestimoDto;
 import br.com.fluxoteca.backend.dto.Emprestimo.EmprestimoResponseDto;
 import br.com.fluxoteca.backend.model.Emprestimo;
 import br.com.fluxoteca.backend.model.enums.Estado;
+import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
 import br.com.fluxoteca.backend.repository.EmprestimoRepository;
 import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
@@ -58,6 +60,10 @@ public class EmprestimoController {
             return ResponseEntity.notFound().build();
 
         var exemplar = exemplarRepository.getReferenceById(data.exemplar());
+
+        if(!exemplar.getEstado().equals(Estado.DISPONIVEL))
+            return ResponseEntity.badRequest().build();
+
         var leitor = leitorRepository.getReferenceById(data.leitor());
 
         exemplar.setEstado(Estado.EMPRESTADO);
@@ -139,6 +145,16 @@ public class EmprestimoController {
 
         return ResponseEntity.ok(new EmprestimoResponseDto(emprestimo));
 
+    }
+
+    @PutMapping("finalizar/{id}")
+    @Transactional
+    @Operation(summary = "Finaliza um empréstimo")
+    public ResponseEntity<Void> finalizarEmprestimo(@PathVariable Long id){
+        var emprestimo = emprestimoRepository.getReferenceById(id);
+        emprestimo.setEstado(EstadoEmprestimo.FINALIZADO);
+        emprestimo.getExemplar().setEstado(Estado.DISPONIVEL);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
