@@ -5,7 +5,7 @@ type contentReportCard = {
 }
 
 type exemplar = {
-    id:number,
+    id:string,
     livro:littleBook,
     localizacao:string,
     estado:string,
@@ -25,7 +25,6 @@ type Book = {
     status:boolean,
     exemplares:exemplar[]
 }
-
 
 type leitor = {
     id:number,

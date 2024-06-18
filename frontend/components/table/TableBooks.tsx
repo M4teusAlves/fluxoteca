@@ -1,5 +1,8 @@
 'use client'
 import React from "react";
+
+import {Accordion, AccordionItem} from "@nextui-org/react";
+
 import {
   Table,
   TableHeader,
@@ -18,19 +21,20 @@ import {
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import { columns, fetchBooks, statusOptions } from "./databook";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalBooks from "../modal/book/ModalBooks";
+import ModalAddExemplar from "../modal/book/ModalAddExemplar";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["nome", "autor", "categoria", "status"];
+const INITIAL_VISIBLE_COLUMNS = ["nome", "autor", "categoria", "actions"];
 
 type Book = {
   id: number,
@@ -69,6 +73,12 @@ export default function TableBook() {
   const handleClickAddBook = () => {
     setShowModalBooks(true);
   };
+
+  const [showModalExemplar, setShowModalExemplar] = useState(false);
+
+  const handleClickAddExemplar = () => {
+    setShowModalExemplar(true);
+  }
 
   const [filterValue, setFilterValue] = useState("");
   const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -130,7 +140,14 @@ export default function TableBook() {
 
     switch (columnKey) {
       case "nome":
-        return (<span>{book.nome}</span>);
+        return (
+        <span>{book.nome}</span>
+        // <Accordion isCompact selectionMode="single">
+        // <AccordionItem key="item.id" aria-label="Accordion 1" title={book.nome}>
+        //   Exemplar 276135621
+        // </AccordionItem>
+        // </Accordion>
+        );
       case "autor":
         return (<span>{book.autor}</span>);
       case "categoria":
@@ -140,9 +157,9 @@ export default function TableBook() {
           <div className="relative flex justify-end items-center gap-2">
             <Button isIconOnly size="sm" variant="bordered" onPress={() => {
               setCurrentBookID(book.id)
-              // handleClickEditUser()
+              handleClickAddExemplar()
             }}>
-              <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
+              <AddIcon className="text-[#7B6ED6]" />
             </Button>
           </div>
         );
@@ -262,7 +279,8 @@ export default function TableBook() {
         <TableBody emptyContent={"Nenhum livro encontrado"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+              {(columnKey) => 
+              <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
@@ -272,11 +290,11 @@ export default function TableBook() {
         setShowModalBooks(false)
         setIsLoading(true);
       }} />}
-      {/* Condicional para mostrar modal de editar dados do leitor */}
-      {/* {showModalEditUser && <ModalEditUser isOpen={showModalEditUser} onClose={() => {
-        setShowModalEditUser(false)
+      {/* Condicional para mostrar modal de adicionar exemplar*/}
+      {showModalExemplar && <ModalAddExemplar isOpen={showModalExemplar} onClose={() => {
+        setShowModalExemplar(false)
         setIsLoading(true);
-      }} userID={currentUserID}/>} */}
+      }} bookID={currentBookID}/>}
     </>
   );
 }

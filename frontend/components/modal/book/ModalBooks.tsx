@@ -9,8 +9,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
   const [showMessage, setShowMessage] = useState(false);
   const messageConfirmation = 'Cadastrado com sucesso.';
   const [errors, setErrors] = useState<{ nome?: string, autor?: string, categoria?: string }>({});
-  const [authors, setAuthors] = useState<Array<{ id?: number, nome?: string }>>([]);
-  const [categories, setCategories] = useState<Array<{ id?: number, nome?: string }>>([]);
+  const [authors, setAuthors] = useState<Array<{ id: number, nome?: string }>>([]);
+  const [categories, setCategories] = useState<Array<{ id: number | string, nome?: string }>>([]);
   const [showAddAuthorModal, setShowAddAuthorModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
 
@@ -51,7 +51,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
     };
 
     fetchData();
-  }, [token]);
+  }, [token, authors, categories]);
 
   // Validate form fields
   const validateForm = () => {
@@ -157,7 +157,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
                       onChange={(e) => setAuthor(e.target.value)}
                     >
                       {authors.map((author, index) => (
-                        <SelectItem key={index} value={author.nome}>
+                        <SelectItem key={author.id} value={author.id}>
                           {author.nome}
                         </SelectItem>
                       ))}
@@ -175,7 +175,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
                       onChange={(e) => setCategory(e.target.value)}
                     >
                       {categories.map((category, index) => (
-                        <SelectItem key={index} value={category.nome}>
+                        <SelectItem key={category.id} value={category.id}>
                           {category.nome}
                         </SelectItem>
                       ))}
