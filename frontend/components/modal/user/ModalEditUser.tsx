@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
+import ModalDeleteUser from "./ModalDeleteUser";
 
 export default function ModalEditUser({ isOpen, onClose, userID }: any) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -10,10 +11,20 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
   const [showMessage, setShowMessage] = useState(false);
   const messageConfirmation = 'Dados atualizados com sucesso.'
 
+  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+
   const [errors, setErrors] = useState<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>({});
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userData, setUserData] = useState<{ nome?: string; endereco?: string; email?: string; afiliacao?: string; dataNascimento?: string; telefone?: string }>({});
+
+  const [userId, setUserId] = useState<number | null>(null)
+
+  const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
+
+  useEffect(() => {
+    setUserId(userID)
+  }, [userID])
 
   // Get token
   const token = useJwtToken();
@@ -76,7 +87,10 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
     onClose();
   };
 
-
+  const handleClickDeleteUser = () => {
+    setShowModalDeleteUser(true);
+  };
+  
   // Update (PUT) user
   async function handleUpdateUser(form: FormData) {
 
@@ -99,7 +113,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
         dataNascimento: form.get('dataNascimento'),
         telefone: form.get('telefone'),
       };
-      
+
       const userJSON = JSON.stringify(user);
       console.log(userJSON)
 
@@ -142,10 +156,10 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
       }
 
     }
-  
+
     fetchUserData();
   }, [userID, token]); // Fetch data when userID or token changes
-  
+
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center" isDismissable={false} isKeyboardDismissDisabled={true}>
@@ -156,6 +170,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                 <ModalHeader className="flex flex-col gap-1 text-lg">
                   Dados do Leitor
                   {showMessage && <p className="text-green-600 text-sm fixed mt-7">{messageConfirmation}</p>}
+                  {showDeleteMessage && <p className="text-green-600 text-sm fixed mt-7">Dados do leitor deletado.</p>}
                 </ModalHeader>
                 <ModalBody>
 
@@ -180,7 +195,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="Digite o endereço"
                       variant="bordered"
                       name="endereco"
-                      onChange={(e) => setUserData({ ...userData, endereco: e.target.value })} 
+                      onChange={(e) => setUserData({ ...userData, endereco: e.target.value })}
                     />
                   </div>
 
@@ -192,7 +207,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="leitor@gmail.com"
                       variant="bordered"
                       name="email"
-                      onChange={(e) => setUserData({ ...userData, email: e.target.value })} 
+                      onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                     />
                   </div>
 
@@ -204,7 +219,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       placeholder="Digite a afiliação"
                       variant="bordered"
                       name="afiliacao"
-                      onChange={(e) => setUserData({ ...userData, afiliacao: e.target.value })} 
+                      onChange={(e) => setUserData({ ...userData, afiliacao: e.target.value })}
                     />
                   </div>
 
@@ -217,7 +232,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                       variant="bordered"
                       type="date"
                       name="dataNascimento"
-                      onChange={(e) => setUserData({ ...userData, dataNascimento: e.target.value })} 
+                      onChange={(e) => setUserData({ ...userData, dataNascimento: e.target.value })}
                     />
                   </div>
 
@@ -236,13 +251,19 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                   </div>
 
                 </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={handleClose}>
-                    Cancelar
+                <ModalFooter className="flex flex-row justify-between">
+                  <Button color="danger" variant="flat" onPress={handleClickDeleteUser}>
+                    Deletar
                   </Button>
-                  <Button color="primary" type="submit">
-                    Atualizar
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button color="danger" variant="flat" onPress={handleClose}>
+                      Cancelar
+                    </Button>
+                    <Button color="primary" type="submit">
+                      Atualizar
+                    </Button>
+                  </div>
+
 
                 </ModalFooter>
               </>
@@ -250,6 +271,12 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
           </ModalContent>
         </form>
       </Modal>
+      {/* Condicional para mostrar modal de confirmação de exclusão de leitor */}
+      {showModalDeleteUser && <ModalDeleteUser isOpen={showModalDeleteUser} onClose={() => {
+        setShowModalDeleteUser(false)
+        // setIsLoading(true);
+        // onClose()
+      }} userID={userId} />}
     </>
   );
 }

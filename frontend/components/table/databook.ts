@@ -32,6 +32,8 @@ const columns = [
       const data = await response.json();
       const books = data; // Assuming your API response is an array of user objects
       
+      console.log(books)
+
       return books;
     } catch (error) {
       console.error("Error fetching books:", error);

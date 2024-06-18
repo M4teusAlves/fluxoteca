@@ -79,14 +79,14 @@ export default function Reports(){
                     content={report?.emprestimosConcluidos}
                     />
 
-                    <div className="flex flex-col p-4 justify-center rounded-md w-[33rem] h-64 shadow-large gap-3">
+                    {/* <div className="flex flex-col p-4 justify-center rounded-md w-[33rem] h-64 shadow-large gap-3">
                         <b className="text-xl">Livro Mais Emprestado</b>
                         <p className="text-lg">{report?.livroMaisEmprestado.nome}</p>
                         <b className="text-xl">Categoria Mais Emprestado</b>
                         <p className="text-lg">{report?.categoriaMaisEmprestada.nome}</p>
                         <b className="text-xl">Leitor Mais Assíduo</b>
                         <p className="text-lg">{report?.leitorMaisAssiduo.nome}</p>
-                    </div>
+                    </div> */}
 
                 </section>
             </main>
