@@ -4,6 +4,15 @@ type contentReportCard = {
     content:any,
 }
 
+type register = {
+    id:number,
+    exemplar: exemplar,
+    leitor: leitor,
+    dataDevolucao: Date,
+    estado:string,
+    status:boolean
+}
+
 type exemplar = {
     id:string,
     livro:littleBook,
@@ -13,18 +22,19 @@ type exemplar = {
 }
 
 type littleBook = {
-    id:string,
+    id:number,
     nome:string,
 }
 
 type Book = {
-    id:string,
+    id:number,
     nome:string,
     categoria:string,
     autor: string,
     status:boolean,
     exemplares:exemplar[]
 }
+
 
 type leitor = {
     id:number,

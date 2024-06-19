@@ -88,9 +88,9 @@ public class ExemplarController {
 
     @GetMapping("status/{status}")
     @Operation(summary = "Lista exemplares por status")
-    public ResponseEntity<List<ExemplarResponseDto>> buscaPorStatus(@PathVariable boolean param) {
+    public ResponseEntity<List<ExemplarResponseDto>> buscaPorStatus(@PathVariable boolean status) {
 
-        var exemplaresList = exemplarRepository.findByStatus(param).stream().map(ExemplarResponseDto::new).toList();
+        var exemplaresList = exemplarRepository.findByStatus(status).stream().map(ExemplarResponseDto::new).toList();
 
         return ResponseEntity.ok(exemplaresList);
     }
@@ -104,7 +104,7 @@ public class ExemplarController {
         if(livro == null)
             ResponseEntity.ok(null);
 
-        var exemplaresList = exemplarRepository.findByLivro(livro).stream().map(ExemplarResponseDto::new).toList();
+        var exemplaresList = exemplarRepository.findByLivroActived(livro).stream().map(ExemplarResponseDto::new).toList();
 
         return ResponseEntity.ok(exemplaresList);
     }
