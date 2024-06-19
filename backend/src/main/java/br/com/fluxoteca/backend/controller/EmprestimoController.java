@@ -104,9 +104,18 @@ public class EmprestimoController {
 
     @GetMapping("status/{status}")
     @Operation(summary = "Lista emprestimos por status")
-    public ResponseEntity<List<EmprestimoResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+    public ResponseEntity<List<EmprestimoResponseDto>> buscaPorStatus(@PathVariable boolean status) {
 
-        var emprestimosList = emprestimoRepository.findByStatus(param).stream().map(EmprestimoResponseDto::new).toList();
+        var emprestimosList = emprestimoRepository.findByStatus(status).stream().map(EmprestimoResponseDto::new).toList();
+
+        return ResponseEntity.ok(emprestimosList);
+    }
+
+    @GetMapping("estado/{estado}")
+    @Operation(summary = "Lista emprestimos por estado")
+    public ResponseEntity<List<EmprestimoResponseDto>> buscaPorEstado(@PathVariable EstadoEmprestimo estado) {
+
+        var emprestimosList = emprestimoRepository.findByEstadoAtivo(estado).stream().map(EmprestimoResponseDto::new).toList();
 
         return ResponseEntity.ok(emprestimosList);
     }
@@ -178,7 +187,7 @@ public class EmprestimoController {
     @Transactional
     @Operation(summary = "Valida o empréstimo com base na data de devolução")
     public ResponseEntity<Void> validaemprestimos (){
-        emprestimoRepository.findByStatus(true).stream().forEach((emprestimo) -> { emprestimo.atualizarEstado(); });
+        emprestimoRepository.findToValidation().stream().forEach((emprestimo) -> { emprestimo.atualizarEstado(); });
         return ResponseEntity.ok().build();
     }
 

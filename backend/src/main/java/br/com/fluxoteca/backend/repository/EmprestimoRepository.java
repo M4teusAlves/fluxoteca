@@ -11,11 +11,19 @@ import br.com.fluxoteca.backend.model.Livro;
 
 import java.time.LocalDate;
 import java.util.List;
+import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
+
 
 
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long>{
     
     List<Emprestimo> findByStatus(boolean status);
+
+    @Query("select e from Emprestimo e where status=true and estado!=FINALIZADO")
+    List<Emprestimo> findToValidation();
+
+    @Query("select e from Emprestimo e where status=true and estado=:estado")
+    List<Emprestimo> findByEstadoAtivo(@Param("estado")EstadoEmprestimo estado);
 
     @Query("select count(*) as total from Emprestimo where status=true and estado=FINALIZADO and dataCriacao between :inicio and :fim")
     Integer findNumberFinalized(@Param("inicio")LocalDate inicio, @Param("fim")LocalDate fim);
