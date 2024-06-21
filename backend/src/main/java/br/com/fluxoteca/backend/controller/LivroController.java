@@ -25,6 +25,7 @@ import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.model.Livro;
 import br.com.fluxoteca.backend.repository.AutorRepository;
 import br.com.fluxoteca.backend.repository.CategoriaRepository;
+import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LivroRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,6 +46,9 @@ public class LivroController {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private ExemplarRepository exemplarRepository;
 
     @PostMapping
     @Transactional
@@ -96,9 +100,9 @@ public class LivroController {
 
     @GetMapping("status/{status}")
     @Operation(summary = "Lista livros por status")
-    public ResponseEntity<List<LivroResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+    public ResponseEntity<List<LivroResponseDto>> buscaPorStatus(@PathVariable boolean status) {
 
-        var livrosList = livroRepository.findByStatus(param).stream().map(LivroResponseDto::new).toList();
+        var livrosList = livroRepository.findByStatus(status).stream().map(LivroResponseDto::new).toList();
 
         return ResponseEntity.ok(livrosList);
     }
@@ -138,6 +142,12 @@ public class LivroController {
     @Operation(summary = "Deleta um livro")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         var livro = livroRepository.getReferenceById(id);
+
+        if(livro==null)
+            return ResponseEntity.noContent().build();
+
+        exemplarRepository.findByLivro(livro).stream().forEach(exemplar -> {exemplar.inativar();});
+
         livro.inativar();
         return ResponseEntity.noContent().build();
     }
@@ -147,6 +157,7 @@ public class LivroController {
     @Operation(summary = "Reativa um livro")
     public ResponseEntity<Void> reativar(@PathVariable Long id){
         var livro = livroRepository.getReferenceById(id);
+
         livro.ativar();
 
         return ResponseEntity.noContent().build();

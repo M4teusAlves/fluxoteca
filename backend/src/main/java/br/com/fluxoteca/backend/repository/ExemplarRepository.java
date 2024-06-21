@@ -23,5 +23,5 @@ public interface ExemplarRepository extends JpaRepository<Exemplar, String>{
     @Query("select count(*) as total from Exemplar where status=true and dataCriacao between :inicio and :fim")
     Integer findNumberExemplarsByDate(@Param("inicio")LocalDate inicio, @Param("fim")LocalDate fim);
 
-    List<Exemplar> findByLivro(Optional<Livro> livro);
+    List<Exemplar> findByLivro(Livro livro);
 }
