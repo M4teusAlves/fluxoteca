@@ -42,10 +42,8 @@ export default function DailyRegisterList({setReport}:prop){
             await updateStateRegister(token, router);
             const reportData = await fetchRegisters(token, router);
             setRegisters(reportData);
-            setIsLoading(false)
           } catch (error) {
             console.error("Error fetching registers:", error);
-            setIsLoading(false)
           }
         };
     
@@ -61,7 +59,7 @@ export default function DailyRegisterList({setReport}:prop){
                 }
                 <Accordion variant="splitted">
                   {registers.map((register)=>(
-                    <AccordionItem title={register.leitor.nome}>
+                    <AccordionItem key={register.id} title={register.leitor.nome}>
                       <b>Afiliação</b>
                       <p>{register.leitor.afiliacao}</p>
                       <b>Contato</b>
