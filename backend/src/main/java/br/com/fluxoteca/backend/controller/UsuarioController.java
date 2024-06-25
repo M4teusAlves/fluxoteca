@@ -27,12 +27,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @Tag(name="Usuários")
 public class UsuarioController {
     
@@ -86,9 +85,9 @@ public class UsuarioController {
 
     @GetMapping("status/{status}")
     @Operation(summary = "Lista usuarios por status")
-    public ResponseEntity<List<UsuarioResponseDto>> buscaPorStatus(@RequestParam boolean param) {
+    public ResponseEntity<List<UsuarioResponseDto>> buscaPorStatus(@PathVariable boolean status) {
 
-        var usuariosList = usuarioRepository.findByStatus(param).stream().map(UsuarioResponseDto::new).toList();
+        var usuariosList = usuarioRepository.findByStatus(status).stream().map(UsuarioResponseDto::new).toList();
 
         return ResponseEntity.ok(usuariosList);
     }

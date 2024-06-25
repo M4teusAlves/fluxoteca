@@ -39,7 +39,7 @@ public class Usuario implements UserDetails{
     public Usuario() {
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = LocalDate.now();
-        this.status = true;
+        this.status = false;
     }
 
     public void atualizarInformacao(@Valid AtualizacaoUsuarioDto data){

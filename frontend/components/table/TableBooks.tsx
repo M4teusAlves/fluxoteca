@@ -23,6 +23,7 @@ import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ListIcon from '@mui/icons-material/List';
 import { columns, fetchBooks, fetchDeleteBook, statusOptions } from "./databook";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
@@ -31,6 +32,7 @@ import ModalBooks from "../modal/book/ModalBooks";
 import ModalAddExemplar from "../modal/book/ModalAddExemplar";
 import { useRouter } from "next/navigation";
 import ModalDeleteBook from "../modal/book/ModalDeleteBook";
+import ModalExemplarList from "../modal/exemplar/ModalExemplarList";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -89,6 +91,12 @@ export default function TableBook() {
 
   const handleClickDeleteBook = () => {
     setShowModalDeleteBook(true);
+  }
+
+  const [showModalListBook, setShowModalListBook] = useState(false);
+
+  const handleClickListBook = () => {
+    setShowModalListBook(true);
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -166,6 +174,12 @@ export default function TableBook() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
+            <Button isIconOnly size="sm" variant="bordered" title="Lista de exemplares" onPress={() => {
+              setCurrentBookID(book.id)
+              handleClickListBook()
+            }}>
+              <ListIcon className="text-[#7B6ED6]" />
+            </Button>
             <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
               setCurrentBookID(book.id)
               handleClickAddExemplar()
@@ -315,6 +329,10 @@ export default function TableBook() {
       }} bookID={currentBookID}/>}
       {showModalDeleteBook && <ModalDeleteBook isOpen={showModalDeleteBook} onClose={() => {
         setShowModalDeleteBook(false)
+        setIsLoading(true);
+      }} bookID={currentBookID}/>}
+      {showModalListBook && <ModalExemplarList isOpen={showModalListBook} onClose={() => {
+        setShowModalListBook(false)
         setIsLoading(true);
       }} bookID={currentBookID}/>}
     </>

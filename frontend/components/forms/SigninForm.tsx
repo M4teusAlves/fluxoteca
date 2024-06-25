@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 export function SigninForm() {
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; senha?: string }>({});
+  const [errors, setErrors] = useState<{ login?: string; senha?: string }>({});
 
   const router = useRouter();
 
@@ -63,16 +63,16 @@ export function SigninForm() {
     <div className="w-full max-w-md">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
-          <label htmlFor="email" className="text-sm text-gray-600">USUÁRIO</label>
+          <label htmlFor="login" className="text-sm text-gray-600">USUÁRIO</label>
           <input
-            id="email"
-            name="email"
-            placeholder="Digite o email de administrador"
+            id="login"
+            name="login"
+            placeholder="Digite o login de administrador"
             className="block w-full appearance-none rounded border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black "
             value={login}
             onChange={(e) => setLogin(e.target.value)}
           />
-          {errors.email && <p className="text-red-500 text-xs pt-0.5 pl-1 fixed">{errors.email}</p>}
+          {errors.login && <p className="text-red-500 text-xs pt-0.5 pl-1 fixed">{errors.login}</p>}
         </div>
         <div>
           <label htmlFor="password" className="text-sm text-gray-600">SENHA</label>

@@ -65,3 +65,8 @@ type report = {
     leitorMaisAssiduo:leitor
 }
 
+type user = {
+    id:number,
+    login:string,
+    status:boolean
+}

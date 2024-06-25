@@ -6,6 +6,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import Button from '@/components/sidebar/Button';
 
 
@@ -17,9 +18,10 @@ export default function SystemLayout({ children }: Readonly<{ children: React.Re
                 <ul className='flex flex-col justify-between h-[calc(100vh-248px)]'>
                     <div className='grid gap-4'>
                         <li><Button icon={<LibraryBooksIcon />} textButton={'Empréstimos'} link={"/system/registers"} /></li>
-                        <li><Button icon={<PeopleAltIcon />} textButton={'Leitores'} link={"/system/users"} /></li>
+                        <li><Button icon={<PeopleAltIcon />} textButton={'Leitores'} link={"/system/readers"} /></li>
                         <li><Button icon={<AutoStoriesIcon />} textButton={'Livros'} link={"/system/books"} /></li>
                         <li><Button icon={<AssessmentIcon/>} textButton={'Relatórios'} link={"/system/reports"}/></li>
+                        <li><Button icon={<PersonOutlineIcon/>} textButton={'Usuários'} link={"/system/users"}/></li>
                     </div>
                     <li><Button icon={<LogoutIcon />} textButton={'Sair'} link={"/"} /></li>
                 </ul>
