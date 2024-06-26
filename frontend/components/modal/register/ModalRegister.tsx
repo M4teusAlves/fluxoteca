@@ -19,6 +19,12 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const [exemplar, setExemplar] = useState('');
   const [deliveryDate, setDeliveryDate] = useState('');
 
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
+
+
   // Get token
   const token = useJwtToken();
 
@@ -75,29 +81,6 @@ export default function ModalRegister({ isOpen, onClose }: any) {
       }
     }
 
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       const resExemplares = await fetch('http://localhost:8081/exemplares', {
-    //         method: 'GET',
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       });
-
-    //       if (resExemplares.ok) {
-    //         const dataExemplares = await resExemplares.json();
-    //         setExemplares(dataExemplares)
-    //       }
-    //     } catch (error) {
-    //       console.error("Error fetching exemplares:", error);
-    //     }
-    //   };
-
-    //   fetchData();
-    // }, [livro])
-
     // Validate form fields
     const validateForm = () => {
       const newErrors = {} as { nomeLeitor?: string, nomeLivro?: string, dataEntrega?: DateTime };
@@ -141,8 +124,6 @@ export default function ModalRegister({ isOpen, onClose }: any) {
           dataDevolucao: deliveryDate,
         };
 
-        console.log(register)
-
         const res = await fetch('http://localhost:8081/emprestimos', {
           method: 'POST',
           body: JSON.stringify(register),
@@ -156,7 +137,6 @@ export default function ModalRegister({ isOpen, onClose }: any) {
           setShowMessage(true);
           formRef.current?.reset();
           setName('');
-          // setBook(0);
           setDeliveryDate('');
           setTimeout(() => setShowMessage(false), 3000);
         }
@@ -238,6 +218,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                       <Input
                         label="Data de Entrega"
                         type="date"
+                        min={minDate}
                         placeholder="Selecione a data de entrega"
                         variant="bordered"
                         value={deliveryDate}

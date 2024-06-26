@@ -18,7 +18,7 @@ import {
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import { columns, fetchUsers, statusOptions } from "./data";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
@@ -151,7 +151,7 @@ export default function TableUser() {
               setCurrentUserID(user.id)
               handleClickEditUser()
             }}>
-              <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
+              <EditIcon className="text-[#7B6ED6]" />
             </Button>
           </div>
         );

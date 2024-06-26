@@ -155,7 +155,7 @@ export default function TableBook() {
   }, [sortDescriptor, items]);
 
   const renderCell = useCallback((book: Book, columnKey: React.Key) => {
-    const cellValue = book[columnKey as keyof Book];
+  const cellValue = book[columnKey as keyof Book];
 
     switch (columnKey) {
       case "nome":
