@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function SigninForm() {
+export function SignupForm() {
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
   const [errors, setErrors] = useState<{ login?: string; senha?: string }>({});
@@ -22,8 +22,16 @@ export function SigninForm() {
       newErrors.login = 'É necessário informar o usuário.';
     }
 
+    if (login.length < 5 || login.length > 20){
+        newErrors.login = 'Login precisa ter de 5 a 20 caracteres'
+    }
+
     if (!senha) {
       newErrors.senha = 'É necessário informar a senha.';
+    }
+
+    if (senha.length < 5 || senha.length > 30){
+        newErrors.senha= 'Login precisa ter de 8 a 30 caracteres'
     }
 
     setErrors(newErrors);
@@ -38,21 +46,21 @@ export function SigninForm() {
     }
 
     try {
-      const response = await fetch('http://localhost:8081/login', {
+      const response = await fetch('http://localhost:8081/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login, senha }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.token;
-        localStorage.setItem('jwtToken', token)
-
-        router.push('/system/reports');
-      } else {
+      if (response.status !== 201) 
         alert('Credenciais inválidas');
-      }
+
+      if(response.status === 201)
+        alert('Usuário Criado com sucesso')  
+      
+      setLogin('')
+      setSenha('')
+      
     } catch (error) {
       console.error('Login failed:', error);
       alert('Erro ao conectar com o servidor.');
@@ -67,7 +75,9 @@ export function SigninForm() {
           <input
             id="login"
             name="login"
-            placeholder="Digite o login de administrador"
+            minLength={5}
+            maxLength={20}
+            placeholder="Digite um login de administrador"
             className="block w-full appearance-none rounded border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black "
             value={login}
             onChange={(e) => setLogin(e.target.value)}
@@ -80,6 +90,8 @@ export function SigninForm() {
             id="password"
             name="password"
             type="password"
+            minLength={8}
+            maxLength={30}
             placeholder="Digite a senha de administrador"
             className="block w-full appearance-none rounded border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black"
             value={senha}
@@ -89,7 +101,7 @@ export function SigninForm() {
         </div>
         <div>
           <button type="submit" className="w-full bg-[#7c6ed6cc] text-white px-4 py-2 rounded hover:bg-[#7B6ED6] text-lg mt-1">
-            Entrar
+            Cadastrar
           </button>
         </div>
       </form>

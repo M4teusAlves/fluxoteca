@@ -9,7 +9,7 @@ public record CriacaoUsuarioDto(
     @Size(min = 5, max = 20)
     String login,
     @NotBlank
-    @Size(min = 8, max = 15)
+    @Size(min = 8, max = 30)
     String senha) {
     
 }

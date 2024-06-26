@@ -22,12 +22,17 @@ import {
 import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
 import AddIcon from '@mui/icons-material/Add';
-import { columns, fetchBooks, statusOptions } from "./databook";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ListIcon from '@mui/icons-material/List';
+import { columns, fetchBooks, fetchDeleteBook, statusOptions } from "./databook";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalBooks from "../modal/book/ModalBooks";
 import ModalAddExemplar from "../modal/book/ModalAddExemplar";
+import { useRouter } from "next/navigation";
+import ModalDeleteBook from "../modal/book/ModalDeleteBook";
+import ModalExemplarList from "../modal/exemplar/ModalExemplarList";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -46,6 +51,7 @@ type Book = {
 
 export default function TableBook() {
 
+  const router = useRouter();
   const token = useJwtToken();
   const [books, setBooks] = useState<Book[]>([]); // State to store fetched users
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +61,7 @@ export default function TableBook() {
     const fetchData = async () => {
       try {
         if (!token) return;
+        
         setIsLoading(true);
         const booksData = await fetchBooks(token);
         setBooks(booksData);
@@ -78,6 +85,18 @@ export default function TableBook() {
 
   const handleClickAddExemplar = () => {
     setShowModalExemplar(true);
+  }
+
+  const [showModalDeleteBook, setShowModalDeleteBook] = useState(false);
+
+  const handleClickDeleteBook = () => {
+    setShowModalDeleteBook(true);
+  }
+
+  const [showModalListBook, setShowModalListBook] = useState(false);
+
+  const handleClickListBook = () => {
+    setShowModalListBook(true);
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -155,11 +174,23 @@ export default function TableBook() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Lista de exemplares" onPress={() => {
+              setCurrentBookID(book.id)
+              handleClickListBook()
+            }}>
+              <ListIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
               setCurrentBookID(book.id)
               handleClickAddExemplar()
             }}>
               <AddIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" title="Deletar livro" onPress={() => {
+              setCurrentBookID(book.id)
+              handleClickDeleteBook()
+            }}>
+              <DeleteIcon className="text-[#7B6ED6]" />
             </Button>
           </div>
         );
@@ -277,6 +308,7 @@ export default function TableBook() {
           )}
         </TableHeader>
         <TableBody emptyContent={"Nenhum livro encontrado"} items={sortedItems}>
+          
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => 
@@ -293,6 +325,14 @@ export default function TableBook() {
       {/* Condicional para mostrar modal de adicionar exemplar*/}
       {showModalExemplar && <ModalAddExemplar isOpen={showModalExemplar} onClose={() => {
         setShowModalExemplar(false)
+        setIsLoading(true);
+      }} bookID={currentBookID}/>}
+      {showModalDeleteBook && <ModalDeleteBook isOpen={showModalDeleteBook} onClose={() => {
+        setShowModalDeleteBook(false)
+        setIsLoading(true);
+      }} bookID={currentBookID}/>}
+      {showModalListBook && <ModalExemplarList isOpen={showModalListBook} onClose={() => {
+        setShowModalListBook(false)
         setIsLoading(true);
       }} bookID={currentBookID}/>}
     </>

@@ -4,6 +4,7 @@ import { Accordion, AccordionItem, Button, ScrollShadow } from "@nextui-org/reac
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { fetchFinishRegister, fetchRegisters, fetchReport, updateStateRegister } from "./dataReports";
+import ModalFinishRegister from "../modal/register/ModalFinishRegister";
 
 interface prop {
   setReport:React.Dispatch<React.SetStateAction<report|undefined>>
@@ -12,13 +13,19 @@ interface prop {
 export default function DailyRegisterList({setReport}:prop){
 
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const token = useJwtToken();
     const [registers, setRegisters] = useState<register[]>([]);
+    const [register, setRegister] = useState<register>();
+    const [showModalFinishRegister, setShowModalFinishRegister] = useState(false);
 
-    async function finishRegister(id:string) {
+    const handleClickFinishRegister = () => {
+      setShowModalFinishRegister(true);
+    }
+
+    async function updateReport() {
       try {
-        await fetchFinishRegister(token, router, id);
         const registersData = await fetchRegisters(token, router);
         const reportData = await fetchReport(token, router);
         setReport(reportData);
@@ -41,7 +48,7 @@ export default function DailyRegisterList({setReport}:prop){
         };
     
         fetchData();
-      }, [token]);
+      }, [token, isLoading]);
 
     return(
         <div className="flex flex-col gap-2 items-center justify-start w-96 border-1 rounded-md shadow-xl">
@@ -52,7 +59,7 @@ export default function DailyRegisterList({setReport}:prop){
                 }
                 <Accordion variant="splitted">
                   {registers.map((register)=>(
-                    <AccordionItem title={register.leitor.nome}>
+                    <AccordionItem key={register.id} title={register.leitor.nome}>
                       <b>Afiliação</b>
                       <p>{register.leitor.afiliacao}</p>
                       <b>Contato</b>
@@ -62,13 +69,20 @@ export default function DailyRegisterList({setReport}:prop){
                       <p>{register.exemplar.id +" - "+register.exemplar.livro.nome}</p>
                       <b>Localização</b>
                       <p>{register.exemplar.localizacao}</p>
-                      <Button color="primary" onClick={()=>{finishRegister(register.id.toString())}}>
+                      <Button color="primary" onClick={()=>{
+                        handleClickFinishRegister()
+                        setRegister(register)
+                      }}>
                         Finalizar
                       </Button>
                     </AccordionItem>
                   ))}
                 </Accordion>
-                
+                {showModalFinishRegister && <ModalFinishRegister isOpen={showModalFinishRegister} onClose={() => {
+                  setShowModalFinishRegister(false)
+                  updateReport()
+                  setIsLoading(true)
+                }} registerId={register?.id}/>}
                 
             </ScrollShadow>
         </div>
