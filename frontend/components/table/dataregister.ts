@@ -18,7 +18,7 @@ const columns = [
         return [];
       }
   
-      const response = await fetch("http://localhost:8081/emprestimos", {
+      const response = await fetch("http://192.168.7.22:8081/emprestimos", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -55,7 +55,7 @@ const columns = [
       const dataJSON = JSON.stringify(register);
 
       //TERMINAR
-      const res = await fetch('http://localhost:8081/emprestimos', {
+      const res = await fetch('http://192.168.7.22:8081/emprestimos', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const columns = [
           return;
         }
 
-        const res = await fetch(`http://localhost:8081/emprestimos/finalizar/${registerID}`, {
+        const res = await fetch(`http://192.168.7.22:8081/emprestimos/finalizar/${registerID}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

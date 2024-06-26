@@ -116,7 +116,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
       const userJSON = JSON.stringify(user);
       // console.log(userJSON)
 
-      const res = await fetch(`http://localhost:8081/leitores`, {
+      const res = await fetch(`http://192.168.7.22:8081/leitores`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
     async function fetchUserData() {
       try {
         if (token) { // Check if token is valid before fetching data
-          const res = await fetch(`http://localhost:8081/leitores/${userID}`, {
+          const res = await fetch(`http://192.168.7.22:8081/leitores/${userID}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

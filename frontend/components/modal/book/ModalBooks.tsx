@@ -25,14 +25,14 @@ export default function ModalBooks({ isOpen, onClose }: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resAuthors = await fetch('http://localhost:8081/autores', {
+        const resAuthors = await fetch('http://192.168.7.22:8081/autores', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
-        const resCategories = await fetch('http://localhost:8081/categorias', {
+        const resCategories = await fetch('http://192.168.7.22:8081/categorias', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
       console.log(book)
 
-      const res = await fetch('http://localhost:8081/livros', {
+      const res = await fetch('http://192.168.7.22:8081/livros', {
         method: 'POST',
         body: JSON.stringify(book),
         headers: {

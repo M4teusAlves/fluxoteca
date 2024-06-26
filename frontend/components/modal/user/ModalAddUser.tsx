@@ -93,7 +93,7 @@ export default function ModalUser({ isOpen, onClose }: any) {
         telefone: form.get('telefone'),
       };
 
-      const res = await fetch('http://localhost:8081/leitores', {
+      const res = await fetch('http://192.168.7.22:8081/leitores', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {

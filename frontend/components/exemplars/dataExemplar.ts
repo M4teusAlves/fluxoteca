@@ -8,7 +8,7 @@ export async function fetchExemplarsByBook(token:any, router:any, id:string) {
           return [];
         }
     
-        const response = await fetch(`http://localhost:8081/exemplares/livro/${id}`, {
+        const response = await fetch(`http://192.168.7.22:8081/exemplares/livro/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

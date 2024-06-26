@@ -32,14 +32,14 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resReaders = await fetch('http://localhost:8081/leitores', {
+        const resReaders = await fetch('http://192.168.7.22:8081/leitores', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
-        const resBooks = await fetch('http://localhost:8081/livros', {
+        const resBooks = await fetch('http://192.168.7.22:8081/livros', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const handleSelectBook = async (livroID: string) => {
     console.log(livroID)
       try {
-        const resExemplar = await fetch(`http://localhost:8081/exemplares/livro/${livroID}`, {
+        const resExemplar = await fetch(`http://192.168.7.22:8081/exemplares/livro/${livroID}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
           dataDevolucao: deliveryDate,
         };
 
-        const res = await fetch('http://localhost:8081/emprestimos', {
+        const res = await fetch('http://192.168.7.22:8081/emprestimos', {
           method: 'POST',
           body: JSON.stringify(register),
           headers: {

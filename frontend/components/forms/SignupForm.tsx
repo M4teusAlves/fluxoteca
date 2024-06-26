@@ -46,7 +46,7 @@ export function SignupForm() {
     }
 
     try {
-      const response = await fetch('http://localhost:8081/usuarios', {
+      const response = await fetch('http://192.168.7.22:8081/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login, senha }),

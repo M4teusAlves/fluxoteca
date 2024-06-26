@@ -43,7 +43,7 @@ export default function ModalAddAuthor({ isOpen, onClose, onAuthorAdded }: any) 
         nome: authorName,
       };
 
-      const res = await fetch('http://localhost:8081/autores', {
+      const res = await fetch('http://192.168.7.22:8081/autores', {
         method: 'POST',
         body: JSON.stringify(author),
         headers: {

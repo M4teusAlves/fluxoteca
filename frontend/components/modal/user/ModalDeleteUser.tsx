@@ -26,7 +26,7 @@ export default function ModalDeleteUser({ isOpen, onClose, userID }: any) {
         return;
       }
 
-      const res = await fetch(`http://localhost:8081/leitores/${userId}`, {
+      const res = await fetch(`http://192.168.7.22:8081/leitores/${userId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -28,7 +28,7 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
 
       console.log(exemplar)
 
-      const res = await fetch('http://localhost:8081/exemplares', {
+      const res = await fetch('http://192.168.7.22:8081/exemplares', {
         method: 'POST',
         body: JSON.stringify(exemplar),
         headers: {

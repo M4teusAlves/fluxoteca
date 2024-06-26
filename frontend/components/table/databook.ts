@@ -21,7 +21,7 @@ async function fetchBooks(token: any) {
       return [];
     }
 
-    const response = await fetch("http://localhost:8081/livros/status/true", {
+    const response = await fetch("http://192.168.7.22:8081/livros/status/true", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -49,7 +49,7 @@ export async function fetchDeleteBook(token:any, router: any, id: string) {
       alert('Token de autenticação não encontrado');
     }
 
-    const response = await fetch(`http://localhost:8081/livros/${id}`, {
+    const response = await fetch(`http://192.168.7.22:8081/livros/${id}`, {
         method: 'DELETE',
         headers: {
         Authorization: `Bearer ${token}`

@@ -6,7 +6,7 @@ export async function fetchActiveUser(token:any, router:any, id:string) {
           alert('Token de autenticação não encontrado');
         }
     
-        const response = await fetch(`http://localhost:8081/usuarios/${id}`, {
+        const response = await fetch(`http://192.168.7.22:8081/usuarios/${id}`, {
             method: 'PUT',
             headers: {
             Authorization: `Bearer ${token}`
@@ -32,7 +32,7 @@ export async function fetchDeleteUser(token:any, router:any, id:string) {
         alert('Token de autenticação não encontrado');
       }
   
-      const response = await fetch(`http://localhost:8081/usuarios/${id}`, {
+      const response = await fetch(`http://192.168.7.22:8081/usuarios/${id}`, {
           method: 'DELETE',
           headers: {
           Authorization: `Bearer ${token}`
@@ -60,7 +60,7 @@ export async function fetchUsersByStatus(token:any, router:any, status:boolean) 
           return [];
         }
     
-        const response = await fetch(`http://localhost:8081/usuarios/status/${status}`, {
+        const response = await fetch(`http://192.168.7.22:8081/usuarios/status/${status}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

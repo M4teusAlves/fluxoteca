@@ -21,7 +21,7 @@ async function fetchUsers(token: any) {
       return [];
     }
 
-    const response = await fetch("http://localhost:8081/leitores", {
+    const response = await fetch("http://192.168.7.22:8081/leitores", {
       headers: {
         Authorization: `Bearer ${token}`
       }

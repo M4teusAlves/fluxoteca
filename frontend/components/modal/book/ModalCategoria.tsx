@@ -43,7 +43,7 @@ export default function ModalAddCategory({ isOpen, onClose, onCategoryAdded }: a
         nome: categoryName,
       };
 
-      const res = await fetch('http://localhost:8081/categorias', {
+      const res = await fetch('http://192.168.7.22:8081/categorias', {
         method: 'POST',
         body: JSON.stringify(category),
         headers: {

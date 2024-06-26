@@ -8,7 +8,7 @@ export async function updateStateRegister(token: any, router:any){
           alert('Token de autenticação não encontrado');
         }
     
-        const response = await fetch("http://localhost:8081/emprestimos/validar", {
+        const response = await fetch("http://192.168.7.22:8081/emprestimos/validar", {
             method: 'PUT',
             headers: {
             Authorization: `Bearer ${token}`
@@ -34,7 +34,7 @@ export async function fetchFinishRegister(token: any, router:any, id:string){
         alert('Token de autenticação não encontrado');
       }
   
-      const response = await fetch(`http://localhost:8081/emprestimos/finalizar/${id}`, {
+      const response = await fetch(`http://192.168.7.22:8081/emprestimos/finalizar/${id}`, {
           method: 'PUT',
           headers: {
           Authorization: `Bearer ${token}`
@@ -61,7 +61,7 @@ export async function fetchRegisters(token: any, router:any) {
         return [];
       }
   
-      const response = await fetch("http://localhost:8081/emprestimos/estado/ULTIMO_DIA", {
+      const response = await fetch("http://192.168.7.22:8081/emprestimos/estado/ULTIMO_DIA", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -94,7 +94,7 @@ export async function fetchReport(token: any, router:any) {
       return [];
     }
 
-    const response = await fetch("http://localhost:8081/relatorios", {
+    const response = await fetch("http://192.168.7.22:8081/relatorios", {
       headers: {
         Authorization: `Bearer ${token}`
       }
