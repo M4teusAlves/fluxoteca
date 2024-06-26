@@ -1,10 +1,7 @@
-
 const columns = [
-    // {name: "ID", uid: "id", sortable: true},
-    {name: "NOME", uid: "name", sortable: true},
     {name: "LIVRO", uid: "livro", sortable: true},
-    {name: "DATA ENTREGA", uid: "dataentrega", sortable: true},
-    // {name: "STATUS", uid: "status", sortable: true},
+    {name: "LEITOR", uid: "leitor", sortable: true},
+    {name: "DATA DEVOLUÇÃO", uid: "dataDevolucao", sortable: true},
     {name: "", uid: "actions"},
   ];
   
@@ -13,9 +10,9 @@ const columns = [
     {name: "Paused", uid: "paused"},
   ];
   
-  async function fetchUsers(token: any) {
+  async function fetchRegisters(token: any) {
     try {
-      // const token = useJwtToken();
+
       if (!token) {
         alert('Token de autenticação não encontrado');
         return [];
@@ -27,17 +24,75 @@ const columns = [
         }
       });
       if (!response.ok) {
-        throw new Error("Falha ao obter emprestimo");
+        throw new Error("Falha ao obter emprestimos");
       }
-      const data = await response.json();
-      const users = data; // Assuming your API response is an array of user objects
+      const data: register[] = await response.json();
+
+      const filteredDatas = data.filter(data => data.estado !== 'FINALIZADO');
+
+      const registers = filteredDatas; // Assuming your API response is an array of user objects
       
-      return users;
+      return registers;
     } catch (error) {
       console.error("Error fetching registros:", error);
       return []; 
     }
   }
+
+  // Update dataDevolucao (PUT) register
+  async function putRegister(token: any, registerID: number, registerDate: string) {
+    try {
+      if (!token) {
+        alert('Ação não permitida pelo usuário!')
+        return;
+      }
+
+      const register = {
+        id: registerID,
+        dataDevolucao: registerDate
+      }
+
+      const dataJSON = JSON.stringify(register);
+
+      //TERMINAR
+      const res = await fetch('http://localhost:8081/emprestimos', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: dataJSON,
+      })
+
+      return res.ok
+
+    } catch (e) {
+      console.error('Erro ao atualizar os dados do empréstimo:', e)
+    }
+  }
+
+    // Update status (PUT) register 
+    async function handleDeleteRegister(token: any, registerID: number) {
+      try {
+        if (!token) {
+          alert('Ação não permitida pelo usuário!')
+          return;
+        }
+
+        const res = await fetch(`http://localhost:8081/emprestimos/finalizar/${registerID}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+  
+        return res.ok
+  
+      } catch (e) {
+        console.error('Erro ao finalizar o empréstimo:', e)
+      }
+    }
  
-  export {columns, fetchUsers, statusOptions};
+  export {columns, fetchRegisters, statusOptions, putRegister, handleDeleteRegister};
   

@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
@@ -115,7 +114,7 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
       };
 
       const userJSON = JSON.stringify(user);
-      console.log(userJSON)
+      // console.log(userJSON)
 
       const res = await fetch(`http://localhost:8081/leitores`, {
         method: 'PUT',

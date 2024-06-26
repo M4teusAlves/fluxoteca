@@ -19,46 +19,48 @@ import {
 import { PlusIcon } from "./PlusIcon";
 import { SearchIcon } from "./SearchIcon";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { columns, fetchUsers, statusOptions } from "./dataregister";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CheckIcon from '@mui/icons-material/Check';
+import { columns, fetchRegisters, statusOptions } from "./dataregister";
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalRegister from "../modal/register/ModalRegister";
-import ModalEditUser from "../modal/user/ModalEditUser";
+import ModalViewRegister from "../modal/register/ModalViewRegister"
+import ModalEditRegister from "../modal/register/ModalEditRegister";
+import ModalEndRegister from "../modal/register/ModalEndRegister";
+import { updateStateRegister } from "../reports/dataReports";
+import { useRouter } from "next/navigation";
+
+import { parseISO, format } from 'date-fns';
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "livro", "dataentrega", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["livro", "leitor", "dataDevolucao", "actions"];
 
-type User = {
-  id: number,
-  nome: string,
-  autor: string,
-  categoria: string,
-  tipo?: "REGISTRO",
-  status: string
-}
-
-export default function TableUser() {
+export default function TableRegister() {
 
   const token = useJwtToken();
-  const [users, setUsers] = useState<User[]>([]); // State to store fetched users
+  const router = useRouter()
+  const [registers, setRegisters] = useState<register[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentUserID, setCurrentUserID] = useState(0)
+  const [currentRegister, setCurrentRegister] = useState<register | null>(null)
+  const [currentRegisterID, setCurrentRegisterID] = useState(0)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!token) return;
         setIsLoading(true);
-        const usersData = await fetchUsers(token);
-        setUsers(usersData);
+        const registersData = await fetchRegisters(token);
+        await updateStateRegister(token, router)
+        setRegisters(registersData);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching registers:", error);
         setIsLoading(false);
       }
     };
@@ -67,14 +69,24 @@ export default function TableUser() {
   }, [token, isLoading]);
 
   const [showModalRegister, setShowModalRegister] = useState(false);
-  const [showModalEditUser, setShowModalEditUser] = useState(false);
+  const [showModalViewRegister, setShowModalViewRegister] = useState(false);
+  const [showModalEditRegister, setShowModalEditRegister] = useState(false)
+  const [showModalEndRegister, setShowModalEndRegister] = useState(false)
 
-  const handleClickAddUser = () => {
+  const handleClickAddRegister = () => {
     setShowModalRegister(true);
   };
 
-  const handleClickEditUser = () => {
-    setShowModalEditUser(true)
+  const handleClickViewRegister = () => {
+    setShowModalViewRegister(true)
+  }
+
+  const handleClickEditRegister = () => {
+    setShowModalEditRegister(true)
+  }
+
+  const handleClickEndRegister = () => {
+    setShowModalEndRegister(true)
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -98,21 +110,21 @@ export default function TableUser() {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...registers];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.nome.toLowerCase().includes(filterValue.toLowerCase()),
+      filteredUsers = filteredUsers.filter((register: register) =>
+        register.leitor.nome.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+      filteredUsers = filteredUsers.filter((register: register) =>
+        Array.from(statusFilter).includes(register.estado),
       );
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [registers, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -124,38 +136,81 @@ export default function TableUser() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
+    return [...items].sort((a: register, b: register) => {
+      const first = a[sortDescriptor.column as keyof register] as number;
+      const second = b[sortDescriptor.column as keyof register] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
+  const ULTIMO_DIA_CLASS = "bg-orange-300 p-2 rounded-xl";
+  const EM_DIA_CLASS = "bg-green-300 p-2 rounded-xl";
+  const ATRASADO_CLASS = "bg-red-300 p-2 rounded-xl";
+
+  const ESTADOS = {
+    ULTIMO_DIA: 'ULTIMO_DIA',
+    EM_DIA: 'EM_DIA',
+    ATRASADO: 'ATRASADO'
+  };
+
+  const formatDate = (dateString: string) => {
+    const data = parseISO(dateString);
+    return format(data, 'dd-MM-yyyy');
+  };
+
+  const renderCell = useCallback((register: register, columnKey: React.Key) => {
+    const cellValue = register[columnKey as keyof register];
+
+    const dataFormatada = formatDate(register.dataDevolucao);
+
+    let dataDevolucao;
+    switch (register.estado) {
+      case ESTADOS.ULTIMO_DIA:
+        dataDevolucao = <span className={ULTIMO_DIA_CLASS}>{dataFormatada}</span>;
+        break;
+      case ESTADOS.EM_DIA:
+        dataDevolucao = <span className={EM_DIA_CLASS}>{dataFormatada}</span>;
+        break;
+      default:
+        dataDevolucao = <span className={ATRASADO_CLASS}>{dataFormatada}</span>;
+    }
 
     switch (columnKey) {
-      case "name":
-        return (<span>{user.nome}</span>);
-      case "fone":
-        return (<span>{user.autor}</span>);
+      case "livro":
+        return (<span>{register.exemplar.livro.nome} - {register.exemplar.id}</span>);
+      case "leitor":
+        return (<span>{register.leitor.nome}</span>);
+      case "dataDevolucao":
+        return dataDevolucao;
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
             <Button isIconOnly size="sm" variant="bordered" onPress={() => {
-              setCurrentUserID(user.id)
-              handleClickEditUser()
+              setCurrentRegister(register);
+              handleClickViewRegister();
             }}>
               <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+              setCurrentRegisterID(register.id);
+              handleClickEditRegister();
+            }}>
+              <CalendarMonthIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+              setCurrentRegisterID(register.id);
+              handleClickEndRegister();
+            }}>
+              <CheckIcon className="text-[#7B6ED6]" />
             </Button>
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
-  }, []);
+  }, [registers]);
 
   const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -190,13 +245,13 @@ export default function TableUser() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddUser}>
+            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddRegister}>
               Empréstimo
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} registros</span>
+          <span className="text-default-400 text-small">Total {registers.length} registros</span>
           <label className="flex items-center text-default-400 text-small">
             Linhas por página:
             <select
@@ -217,7 +272,7 @@ export default function TableUser() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    registers.length,
     hasSearchFilter,
   ]);
 
@@ -273,16 +328,26 @@ export default function TableUser() {
           )}
         </TableBody>
       </Table>
-      {/* Condicional para mostrar modal de adicionar leitor */}
+      {/* Condicional para mostrar modal de adicionar emprestimo */}
       {showModalRegister && <ModalRegister isOpen={showModalRegister} onClose={() => {
         setShowModalRegister(false)
         setIsLoading(true);
       }} />}
-      {/* Condicional para mostrar modal de editar dados do leitor */}
-      {showModalEditUser && <ModalEditUser isOpen={showModalEditUser} onClose={() => {
-        setShowModalEditUser(false)
+      {/* Condicional para mostrar o modal de visualizar os dados do emprestimo */}
+      {showModalViewRegister && <ModalViewRegister isOpen={showModalViewRegister} onClose={() => {
+        setShowModalViewRegister(false)
         setIsLoading(true);
-      }} userID={currentUserID}/>}
+      }} register={currentRegister} />}
+      {/* Condicional para mostrar modal de alteração da data de devolução do empréstimo */}
+      {showModalEditRegister && <ModalEditRegister isOpen={showModalEditRegister} onClose={() => {
+        setShowModalEditRegister(false)
+        setIsLoading(true);
+      }} registerID={currentRegisterID} />}
+      {/* Condicional para mostrar modal de finalizacao do empréstimo */}
+      {showModalEndRegister && <ModalEndRegister isOpen={showModalEndRegister} onClose={() => {
+        setShowModalEndRegister(false)
+        setIsLoading(true);
+      }} registerID={currentRegisterID} />}
     </>
   );
 }

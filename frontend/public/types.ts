@@ -8,7 +8,7 @@ type register = {
     id:number,
     exemplar: exemplar,
     leitor: leitor,
-    dataDevolucao: Date,
+    dataDevolucao: string,
     estado:string,
     status:boolean
 }
