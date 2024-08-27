@@ -280,7 +280,7 @@ export default function TableBook() {
   }, [page, pages]);
 
   return (
-    <>
+    <main className="p-4">
       <Table
         className=""
         aria-label="Example table with custom cells, pagination and sorting"
@@ -335,6 +335,6 @@ export default function TableBook() {
         setShowModalListBook(false)
         setIsLoading(true);
       }} bookID={currentBookID}/>}
-    </>
+    </main>
   );
 }

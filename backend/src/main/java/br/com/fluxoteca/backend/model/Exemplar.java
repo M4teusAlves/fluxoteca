@@ -45,6 +45,11 @@ public class Exemplar {
             this.localizacao = data.localizacao();
             this.dataModificacao = LocalDate.now();
         }
+
+        if( data.estado() != null){
+            this.estado = data.estado();
+            this.dataModificacao = LocalDate.now();
+        }
             
         
     }

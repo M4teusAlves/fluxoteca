@@ -49,7 +49,7 @@ export default function Users() {
         <div className='flex w-full flex-col p-5 gap-7'>
             <b>Usuários Ativos</b>
             {validatedUsers.map((user)=>(
-                <div key={user.id} className='w-72 flex items-center rounded-md pl-10 gap-4 h-20 border-3'>
+                <div key={user.id} className='w-96 flex items-center rounded-md pl-10 gap-4 h-20 border-3'>
                     <p>{user.login}</p>
                     <p className='p-1 bg-green-400 rounded-md'>Ativo</p>
                     <Button isIconOnly size="sm" variant="bordered" title="Deletar livro" onPress={() => {
@@ -61,7 +61,7 @@ export default function Users() {
             ))}
             <b>Usuários Inativos</b>
             {unvalidatedUsers.map((user)=>(
-                <div key={user.id} className='w-72 flex items-center rounded-md pl-10 gap-4 h-20 border-3'>
+                <div key={user.id} className='w-96 flex items-center rounded-md pl-10 gap-4 h-20 border-3'>
                     <p>{user.login}</p>
                     <p className='p-1 bg-red-500 rounded-md'>Inativo</p>
                     <Button isIconOnly size="sm" variant="bordered" title="Deletar livro" onPress={() => {

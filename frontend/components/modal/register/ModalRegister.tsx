@@ -21,7 +21,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
 
   const today = new Date();
   const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate());
   const minDate = tomorrow.toISOString().split('T')[0];
 
 
@@ -204,7 +204,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                           // value={exemplar}
                           onChange={(e) => setExemplar(e.target.value)}
                         >
-                          {exemplares.map((exemplar: exemplar) => (
+                          {exemplares.filter(exemplar=>(exemplar.estado==="DISPONIVEL")).map((exemplar: exemplar) => (
                             <SelectItem key={exemplar.id} value={exemplar.id}>
                               {exemplar.id}
                             </SelectItem>
