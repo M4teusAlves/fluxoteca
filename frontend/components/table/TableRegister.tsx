@@ -293,7 +293,7 @@ export default function TableRegister() {
   }, [page, pages]);
 
   return (
-    <>
+    <main className="p-4">
       <Table
         className=""
         aria-label="Example table with custom cells, pagination and sorting"
@@ -348,6 +348,6 @@ export default function TableRegister() {
         setShowModalEndRegister(false)
         setIsLoading(true);
       }} registerID={currentRegisterID} />}
-    </>
+    </main>
   );
 }

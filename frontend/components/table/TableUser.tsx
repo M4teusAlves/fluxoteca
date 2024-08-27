@@ -25,6 +25,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalAddUser from "../modal/user/ModalAddUser";
 import ModalEditUser from "../modal/user/ModalEditUser";
+import { Delete } from "@mui/icons-material";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -153,6 +154,12 @@ export default function TableUser() {
             }}>
               <EditIcon className="text-[#7B6ED6]" />
             </Button>
+            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+              setCurrentUserID(user.id)
+              handleClickEditUser()
+            }}>
+              <Delete className="text-[#7B6ED6]" />
+            </Button>
           </div>
         );
       default:
@@ -241,7 +248,7 @@ export default function TableUser() {
   }, [page, pages]);
 
   return (
-    <>
+    <main className="p-4">
       <Table
         className=""
         aria-label="Example table with custom cells, pagination and sorting"
@@ -286,6 +293,6 @@ export default function TableUser() {
         setShowModalEditUser(false)
         setIsLoading(true);
       }} userID={currentUserID}/>}
-    </>
+    </main>
   );
 }
