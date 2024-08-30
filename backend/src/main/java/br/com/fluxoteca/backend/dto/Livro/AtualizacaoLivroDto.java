@@ -9,6 +9,8 @@ public record AtualizacaoLivroDto(
     Long id,
     @Size(min = 3, max = 90)
     String nome,
+    @Size(max=200)
+    String observacao,
     Long categoria,
     Long autor
 ) {

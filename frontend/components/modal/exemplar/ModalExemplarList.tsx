@@ -5,11 +5,14 @@ import { Accordion, AccordionItem, Button, Modal, ModalBody, ModalContent, Modal
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ModalUpdateExemplar from "./ModalUpdateExemplar";
+import { fetchBook } from "@/components/table/databook";
 
 export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
 
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+
+    const [book, setBook] = useState<Book>()
 
     const token = useJwtToken()
     const [exemplars, setExemplars] = useState<exemplar[]>([])
@@ -23,6 +26,18 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
     }
 
     useEffect(() => {
+
+        const fetchDataBook = async () => {
+            try {
+                if (!token) return;
+                const bookData = await fetchBook(token, router, bookID)
+                setBook(bookData)
+                setIsLoading(false)
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+
         const fetchData = async () => {
         try {
             if (!token) return;
@@ -33,7 +48,8 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
             console.error("Error fetching users:", error);
         }
         };
-    
+        
+        fetchDataBook()
         fetchData();
     }, [token, isLoading]);
 
@@ -63,6 +79,10 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
                         <ModalBody className="flex">
 
                             <b>Número de exemplares: {exemplars.length}</b>
+
+                            <b>Observação</b>
+
+                            <p className="break-words">{book?.observacao}</p>
 
                             <Accordion variant="splitted">
                                 {exemplars.map((exemplar)=>(

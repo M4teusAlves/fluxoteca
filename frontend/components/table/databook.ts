@@ -40,6 +40,38 @@ async function fetchBooks(token: any) {
   }
 }
 
+export async function fetchBook(token:any, router: any, id: string) {
+  try {
+
+    if (!token) {
+      router.push("/signin")
+      alert('Token de autenticação não encontrado');
+    }
+
+    const response = await fetch(`http://localhost:8081/livros/${id}`, {
+        method: 'GET',
+        headers: {
+        Authorization: `Bearer ${token}`
+        }
+    });
+    if (!response.ok) {
+
+      if(response.status == 403)
+          router.push("/signin")
+
+      throw new Error("Falha ao obter livro");
+    }
+
+    const data = await response.json();
+    const book = data;
+
+    return book;
+
+  } catch (error) {
+      console.error("Error:", error); 
+  }
+}
+
 export async function fetchDeleteBook(token:any, router: any, id: string) {
   try {
 

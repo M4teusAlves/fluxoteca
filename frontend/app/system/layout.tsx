@@ -8,13 +8,17 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import Button from '@/components/sidebar/Button';
+import { useRouter } from 'next/navigation';
 
 
 export default function SystemLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+
+    const router = useRouter()
+    
     return (
         <div className="m-0 flex gap-4 h-screen">
             <nav className='h-screen fixed grid gap-4 p-4 bg-slate-100'>
-                <Image src={logo} width={200} height={200} alt="logo fluxoteca" />
+                <Image src={logo} onClick={()=>{router.push("/system/reports")}} className='cursor-pointer'  width={200} height={200} alt="logo fluxoteca" />
                 <ul className='flex flex-col justify-between h-[calc(100vh-248px)]'>
                     <div className='grid gap-4'>
                         <li><Button icon={<LibraryBooksIcon />} textButton={'Empréstimos'} link={"/system/registers"} /></li>

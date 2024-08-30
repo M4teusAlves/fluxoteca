@@ -8,13 +8,14 @@ export default function ModalBooks({ isOpen, onClose }: any) {
   const formRef = useRef<HTMLFormElement>(null);
   const [showMessage, setShowMessage] = useState(false);
   const messageConfirmation = 'Cadastrado com sucesso.';
-  const [errors, setErrors] = useState<{ nome?: string, autor?: string, categoria?: string }>({});
+  const [errors, setErrors] = useState<{ nome?: string, autor?: string, categoria?: string, observation?: string }>({});
   const [authors, setAuthors] = useState<Array<{ id: number, nome?: string }>>([]);
   const [categories, setCategories] = useState<Array<{ id: number | string, nome?: string }>>([]);
   const [showAddAuthorModal, setShowAddAuthorModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
 
   const [name, setName] = useState('');
+  const [observation, setObservation] = useState('');
   const [author, setAuthor] = useState('');
   const [category, setCategory] = useState('');
 
@@ -55,7 +56,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
   // Validate form fields
   const validateForm = () => {
-    const newErrors = {} as { nome?: string, autor?: string, categoria?: string };
+    const newErrors = {} as { nome?: string, autor?: string, categoria?: string, observation?: string };
 
     if (!name) {
       newErrors.nome = 'Campo obrigatório.';
@@ -67,6 +68,10 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
     if (!category) {
       newErrors.categoria = 'Campo obrigatório.';
+    }
+
+    if (!observation){
+      newErrors.observation = 'Campo obrigatório'
     }
 
     setErrors(newErrors);
@@ -93,7 +98,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
       const book = {
         nome: name,
         categoria: parseInt(category),
-        autor: parseInt(author)
+        autor: parseInt(author),
+        observacao: observation
       };
 
       console.log(book)
@@ -113,6 +119,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
         setName('');
         setAuthor('');
         setCategory('');
+        setObservation('')
         setTimeout(() => setShowMessage(false), 3000);
       }
 
@@ -181,6 +188,18 @@ export default function ModalBooks({ isOpen, onClose }: any) {
                       ))}
                     </Select>
                     <Button onPress={() => setShowAddCategoryModal(true)}>Adicionar Categoria</Button>
+                  </div>
+                  <div> {/* Observation Input */}
+                    {errors.observation && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.observation}</p>}
+                    <Input
+                      autoFocus
+                      label="Observação do livro"
+                      type="text"
+                      placeholder="Digite a observação"
+                      variant="bordered"
+                      value={observation}
+                      onChange={(e) => setObservation(e.target.value)}
+                    />
                   </div>
 
                 </ModalBody>

@@ -27,6 +27,7 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String observacao;
     @ManyToOne
     private Autor autor;
     @ManyToOne
@@ -48,6 +49,11 @@ public class Livro {
 
         if( data.nome() != null && !data.nome().isEmpty()){
             this.nome = data.nome();
+            this.dataModificacao = LocalDate.now();
+        }
+
+        if( data.observacao() != null){
+            this.observacao = data.observacao();
             this.dataModificacao = LocalDate.now();
         }
             
