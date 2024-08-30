@@ -33,6 +33,9 @@ import ModalAddExemplar from "../modal/book/ModalAddExemplar";
 import { useRouter } from "next/navigation";
 import ModalDeleteBook from "../modal/book/ModalDeleteBook";
 import ModalExemplarList from "../modal/exemplar/ModalExemplarList";
+import { Edit } from "@mui/icons-material";
+import ModalUpdateBooks from "../modal/book/ModalUpdateBook";
+import ModalUpdateBook from "../modal/book/ModalUpdateBook";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -97,6 +100,12 @@ export default function TableBook() {
 
   const handleClickListBook = () => {
     setShowModalListBook(true);
+  }
+
+  const [showModalUpdateBook, setShowModalUpdateBook] = useState(false);
+
+  const handleClickUpdateBook = () => {
+    setShowModalUpdateBook(true);
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -179,6 +188,12 @@ export default function TableBook() {
               handleClickListBook()
             }}>
               <ListIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" title="Lista de exemplares" onPress={() => {
+              setCurrentBookID(book.id)
+              handleClickUpdateBook()
+            }}>
+              <Edit className="text-[#7B6ED6]" />
             </Button>
             <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
               setCurrentBookID(book.id)
@@ -333,6 +348,10 @@ export default function TableBook() {
       }} bookID={currentBookID}/>}
       {showModalListBook && <ModalExemplarList isOpen={showModalListBook} onClose={() => {
         setShowModalListBook(false)
+        setIsLoading(true);
+      }} bookID={currentBookID}/>}
+      {showModalUpdateBook && <ModalUpdateBook isOpen={showModalUpdateBook} onClose={() => {
+        setShowModalUpdateBook(false)
         setIsLoading(true);
       }} bookID={currentBookID}/>}
     </main>

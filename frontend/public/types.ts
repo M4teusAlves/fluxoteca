@@ -29,6 +29,7 @@ type littleBook = {
 type Book = {
     id:number,
     nome:string,
+    observacao:string,
     categoria:string,
     autor: string,
     status:boolean,

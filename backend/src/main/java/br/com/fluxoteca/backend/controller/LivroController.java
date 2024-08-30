@@ -62,6 +62,8 @@ public class LivroController {
         var autor = autorRepository.getReferenceById(data.autor());
 
         livro.setNome(data.nome());
+
+        livro.setObservacao(data.observacao());
         
         livro.setAutor(autor);
 

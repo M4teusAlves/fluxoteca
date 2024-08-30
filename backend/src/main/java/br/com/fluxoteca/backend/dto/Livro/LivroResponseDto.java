@@ -8,6 +8,7 @@ import br.com.fluxoteca.backend.model.Livro;
 public record LivroResponseDto(
     Long id,
     String nome,
+    String observacao,
     String categoria,
     String autor,
     boolean status,
@@ -15,7 +16,7 @@ public record LivroResponseDto(
 ) {
 
     public LivroResponseDto(Livro livro){
-        this(livro.getId(), livro.getNome(), livro.getCategoria().getNome(), livro.getAutor().getNome(), livro.isStatus(), livro.getExemplares().stream().map(ExemplarResponseDto::new).toList());
+        this(livro.getId(), livro.getNome(), livro.getObservacao(), livro.getCategoria().getNome(), livro.getAutor().getNome(), livro.isStatus(), livro.getExemplares().stream().map(ExemplarResponseDto::new).toList());
     }
     
 }
