@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export const useJwtToken = () => {
-    const [token, setToken] = useState<string | null>(null);
+    const [token, setToken] = useState<string>('');
 
     useEffect(() => {
         const storedToken = localStorage.getItem('jwtToken');

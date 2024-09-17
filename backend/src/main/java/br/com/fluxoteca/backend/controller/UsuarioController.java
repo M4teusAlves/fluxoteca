@@ -97,9 +97,10 @@ public class UsuarioController {
     @Operation(summary = "Atualiza um usuário")
     public ResponseEntity<UsuarioResponseDto> atualizar(@RequestBody @Valid AtualizacaoUsuarioDto data){
         var usuario = usuarioRepository.getReferenceById(data.id());
+
         usuario.atualizarInformacao(data);
 
-        if(!data.senha().isEmpty())
+        if(data.senha()!=null)
             usuario.setSenha(passwordEncryptionService.encryptPassword(data.senha()));
 
         return ResponseEntity.ok(new UsuarioResponseDto(usuario));

@@ -32,16 +32,15 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "fone", "email", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "fone", "email", "afiliacao", "actions"];
 
 type User = {
   id: number,
   nome: string,
   endereco: string,
   email: string,
-  // afiliacao: string,
+  afiliacao: string,
   dataNascimento: string,
-  tipo?: "LEITOR",
   telefone: string,
   status: string
 }
@@ -145,6 +144,8 @@ export default function TableUser() {
         return (<span>{user.nome}</span>);
       case "fone":
         return (<span>{user.telefone}</span>);
+      case "afiliacao":
+          return (<span>{user.afiliacao}</span>);
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
@@ -236,7 +237,6 @@ export default function TableUser() {
       <div className="py-2 px-2 flex justify-center ">
         <Pagination
           isCompact
-          showControls
           showShadow
           color="primary"
           page={page}

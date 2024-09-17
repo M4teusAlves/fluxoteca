@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fluxoteca.backend.dto.Authentication.TokenJWTDataDto;
 import br.com.fluxoteca.backend.dto.Usuario.AutenticaLoginDto;
+import br.com.fluxoteca.backend.dto.Usuario.UsuarioResponseDto;
 import br.com.fluxoteca.backend.model.Usuario;
 import br.com.fluxoteca.backend.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,8 @@ public class AuthenticationController {
         
         var tokenJWT = tokenService.tokenGenerate((Usuario) autenticacao.getPrincipal());
 
-        return ResponseEntity.ok(new TokenJWTDataDto(tokenJWT));
+
+
+        return ResponseEntity.ok(new TokenJWTDataDto(tokenJWT, new UsuarioResponseDto((Usuario) autenticacao.getPrincipal())));
     }
 }

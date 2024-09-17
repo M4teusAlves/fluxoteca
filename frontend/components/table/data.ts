@@ -4,6 +4,7 @@ const columns = [
   {name: "NOME", uid: "name", sortable: true},
   {name: "TELEFONE", uid: "fone", sortable: true},
   {name: "EMAIL", uid: "email"},
+  {name: "AFILIAÇÃO", uid: "afiliacao", sortable: true},
   // {name: "STATUS", uid: "status", sortable: true},
   {name: "", uid: "actions"},
 ];
@@ -31,7 +32,6 @@ async function fetchUsers(token: any) {
     }
     const data = await response.json();
     const users = data; // Assuming your API response is an array of user objects
-    
     return users;
   } catch (error) {
     console.error("Error fetching users:", error);

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.fluxoteca.backend.dto.Usuario.AtualizacaoUsuarioDto;
+import br.com.fluxoteca.backend.model.enums.TipoUsuario;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,28 +36,27 @@ public class Usuario implements UserDetails{
     private boolean status;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
-    
+    private TipoUsuario tipo;
+     
     public Usuario() {
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = LocalDate.now();
+        this.tipo = TipoUsuario.VOLUN;
         this.status = false;
     }
 
     public void atualizarInformacao(@Valid AtualizacaoUsuarioDto data){
 
+
         if( data.login() != null && !data.login().isEmpty()){
             this.login = data.login();
             this.dataModificacao = LocalDate.now();
         }
-            
-    
-            
-
-        if( data.senha() != null && !data.senha().isEmpty()){
-            this.senha = data.senha();
+         
+        if(data.tipo() != null){
+            this.tipo = data.tipo();
             this.dataModificacao = LocalDate.now();
         }
-            
         
     }
 
@@ -77,8 +77,11 @@ public class Usuario implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        if(this.tipo==TipoUsuario.ADMIN) 
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
