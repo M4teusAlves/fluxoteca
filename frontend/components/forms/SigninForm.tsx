@@ -46,8 +46,11 @@ export function SigninForm() {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token;
-        localStorage.setItem('jwtToken', token)
+        console.log(data)
+        console.log(data.usuario.tipo)
+        localStorage.setItem('jwtToken', data.token)
+        localStorage.setItem('login', data.usuario.login)
+        localStorage.setItem('tipo', data.usuario.tipo)
 
         router.push('/system/reports');
       } else {

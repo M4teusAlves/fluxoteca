@@ -17,9 +17,11 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const [name, setName] = useState('');
   const [livro, setBook] = useState('');
   const [exemplar, setExemplar] = useState('');
-  const [deliveryDate, setDeliveryDate] = useState('');
+  
 
   const today = new Date();
+
+  const [deliveryDate, setDeliveryDate] = useState((today.getDate()+15).toString());
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate());
   const minDate = tomorrow.toISOString().split('T')[0];
@@ -32,6 +34,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(deliveryDate)
         const resReaders = await fetch('http://localhost:8081/leitores', {
           method: 'GET',
           headers: {

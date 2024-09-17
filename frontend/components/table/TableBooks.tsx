@@ -36,6 +36,7 @@ import ModalExemplarList from "../modal/exemplar/ModalExemplarList";
 import { Edit } from "@mui/icons-material";
 import ModalUpdateBooks from "../modal/book/ModalUpdateBook";
 import ModalUpdateBook from "../modal/book/ModalUpdateBook";
+import { useTipo } from "@/hooks/useTipo";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -54,8 +55,11 @@ type Book = {
 
 export default function TableBook() {
 
+
+
   const router = useRouter();
   const token = useJwtToken();
+  const tipo = useTipo()
   const [books, setBooks] = useState<Book[]>([]); // State to store fetched users
   const [isLoading, setIsLoading] = useState(false);
   const [currentBookID, setCurrentBookID] = useState(0)
@@ -64,6 +68,7 @@ export default function TableBook() {
     const fetchData = async () => {
       try {
         if (!token) return;
+
         
         setIsLoading(true);
         const booksData = await fetchBooks(token);
@@ -163,7 +168,7 @@ export default function TableBook() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((book: Book, columnKey: React.Key) => {
+  const renderCell = useCallback((book: Book, columnKey: React.Key, tipo:string|null) => {
   const cellValue = book[columnKey as keyof Book];
 
     switch (columnKey) {
@@ -189,24 +194,27 @@ export default function TableBook() {
             }}>
               <ListIcon className="text-[#7B6ED6]" />
             </Button>
-            <Button isIconOnly size="sm" variant="bordered" title="Lista de exemplares" onPress={() => {
-              setCurrentBookID(book.id)
-              handleClickUpdateBook()
-            }}>
-              <Edit className="text-[#7B6ED6]" />
-            </Button>
-            <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
-              setCurrentBookID(book.id)
-              handleClickAddExemplar()
-            }}>
-              <AddIcon className="text-[#7B6ED6]" />
-            </Button>
-            <Button isIconOnly size="sm" variant="bordered" title="Deletar livro" onPress={() => {
-              setCurrentBookID(book.id)
-              handleClickDeleteBook()
-            }}>
-              <DeleteIcon className="text-[#7B6ED6]" />
-            </Button>
+            {tipo==="ADMIN" &&
+            <div className="flex gap-2">
+              <Button isIconOnly size="sm" variant="bordered" title="Atualizar Livro" onPress={() => {
+                setCurrentBookID(book.id)
+                handleClickUpdateBook()
+              }}>
+                <Edit className="text-[#7B6ED6]" />
+              </Button>
+              <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
+                setCurrentBookID(book.id)
+                handleClickAddExemplar()
+              }}>
+                <AddIcon className="text-[#7B6ED6]" />
+              </Button>
+              <Button isIconOnly size="sm" variant="bordered" title="Deletar livro" onPress={() => {
+                setCurrentBookID(book.id)
+                handleClickDeleteBook()
+              }}>
+                <DeleteIcon className="text-[#7B6ED6]" />
+              </Button>
+            </div>}
           </div>
         );
       default:
@@ -247,9 +255,12 @@ export default function TableBook() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddBook}>
+            {tipo === "ADMIN" &&
+              <Button className="bg-[#7B6ED6]" endContent={<PlusIcon />} onPress={handleClickAddBook}>
               Adicionar Livro
-            </Button>
+              </Button>
+            }
+            
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -283,7 +294,6 @@ export default function TableBook() {
       <div className="py-2 px-2 flex justify-center ">
         <Pagination
           isCompact
-          showControls
           showShadow
           color="primary"
           page={page}
@@ -327,7 +337,7 @@ export default function TableBook() {
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => 
-              <TableCell>{renderCell(item, columnKey)}</TableCell>}
+              <TableCell>{renderCell(item, columnKey, tipo)}</TableCell>}
             </TableRow>
           )}
         </TableBody>

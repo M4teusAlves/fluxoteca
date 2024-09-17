@@ -281,7 +281,6 @@ export default function TableRegister() {
       <div className="py-2 px-2 flex justify-center ">
         <Pagination
           isCompact
-          showControls
           showShadow
           color="primary"
           page={page}

@@ -9,11 +9,20 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import Button from '@/components/sidebar/Button';
 import { useRouter } from 'next/navigation';
+import { useTipo } from '@/hooks/useTipo';
 
 
 export default function SystemLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
 
+    const tipo = useTipo()
+
     const router = useRouter()
+
+    const logout = ()=>{
+        localStorage.setItem('jwtToken', "")
+        localStorage.setItem('login', "")
+        localStorage.setItem('tipo', "")
+    }
     
     return (
         <div className="m-0 flex gap-4 h-screen">
@@ -25,9 +34,10 @@ export default function SystemLayout({ children }: Readonly<{ children: React.Re
                         <li><Button icon={<PeopleAltIcon />} textButton={'Leitores'} link={"/system/readers"} /></li>
                         <li><Button icon={<AutoStoriesIcon />} textButton={'Livros'} link={"/system/books"} /></li>
                         <li><Button icon={<AssessmentIcon/>} textButton={'Relatórios'} link={"/system/reports"}/></li>
-                        <li><Button icon={<PersonOutlineIcon/>} textButton={'Usuários'} link={"/system/users"}/></li>
+                        {tipo==="ADMIN" && <li><Button icon={<PersonOutlineIcon/>} textButton={'Usuários'} link={"/system/users"}/></li> }
+                        
                     </div>
-                    <li><Button icon={<LogoutIcon />} textButton={'Sair'} link={"/"} /></li>
+                    <li onClick={logout}><Button icon={<LogoutIcon />} textButton={'Sair'} link={"/"} /></li>
                 </ul>
             </nav>
             <div className='ml-[232px] w-[calc(100vw-216px)] p-4 box-border h-screen'>

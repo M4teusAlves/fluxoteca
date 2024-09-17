@@ -69,5 +69,6 @@ type report = {
 type user = {
     id:number,
     login:string,
+    tipo:string,
     status:boolean
 }

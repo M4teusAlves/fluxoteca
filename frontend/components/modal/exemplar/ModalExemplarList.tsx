@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ModalUpdateExemplar from "./ModalUpdateExemplar";
 import { fetchBook } from "@/components/table/databook";
+import { useTipo } from "@/hooks/useTipo";
 
 export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
 
@@ -18,6 +19,8 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
     const [exemplars, setExemplars] = useState<exemplar[]>([])
 
     const [exemplar, setExemplar] = useState("")
+
+    const tipo = useTipo()
 
     const [showModalUpdateExemplar, setShowModalUpdateExemplar] = useState(false);
 
@@ -96,17 +99,22 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
                                         <b>Status</b>
                                         <p>{exemplar.status ? "Ativo" : "Desativado"}</p>
                                         <div>
-                                            <Button isIconOnly size="sm" variant="bordered" title="Alterar exemplar" onPress={()=>{
-                                                setExemplar(exemplar.id)
-                                                handleClickUpdateExemplar()}}>
-                                                <Edit className="text-[#7B6ED6]" />
-                                            </Button>
-                                            <Button isIconOnly size="sm" variant="bordered" title="Deletar exemplar" onPress={()=>{
-                                                setExemplar(exemplar.id)
-                                                handleClickDeleteExemplar()
-                                            }}>
-                                                <Delete className="text-[#7B6ED6]" />
-                                            </Button>
+                                            {tipo==="ADMIN" &&
+                                                <div>
+                                                    <Button isIconOnly size="sm" variant="bordered" title="Alterar exemplar" onPress={()=>{
+                                                        setExemplar(exemplar.id)
+                                                        handleClickUpdateExemplar()}}>
+                                                        <Edit className="text-[#7B6ED6]" />
+                                                    </Button>
+                                                    <Button isIconOnly size="sm" variant="bordered" title="Deletar exemplar" onPress={()=>{
+                                                        setExemplar(exemplar.id)
+                                                        handleClickDeleteExemplar()
+                                                    }}>
+                                                        <Delete className="text-[#7B6ED6]" />
+                                                    </Button>
+                                                </div>
+                                            }
+                                            
                                         </div>
                                     </AccordionItem>
                                 ))}
