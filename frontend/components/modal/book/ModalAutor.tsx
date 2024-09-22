@@ -2,10 +2,15 @@ import React, { useRef, useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 
-export default function ModalAddAuthor({ isOpen, onClose, onAuthorAdded }: any) {
+export default function ModalAddAuthor({ isOpen, onClose}: any) {
   const formRef = useRef<HTMLFormElement>(null);
   const [authorName, setAuthorName] = useState('');
   const [errors, setErrors] = useState<{ name?: string }>({});
+  const [showMessageConfimation, setShowMessageConfirmation] = useState(false);
+  const messageConfirmation = 'Cadastrado com sucesso.';
+  const [showMessageError, setShowMessageError] = useState(false);
+  const messageError = 'Autor já existente.';
+  
 
   // Get token
   const token = useJwtToken();
@@ -53,10 +58,11 @@ export default function ModalAddAuthor({ isOpen, onClose, onAuthorAdded }: any) 
       });
 
       if (res.ok) {
-        onAuthorAdded(authorName);
-        formRef.current?.reset();
-        setAuthorName('');
-        onClose();
+        setShowMessageConfirmation(true)
+        setTimeout(() => setShowMessageConfirmation(false), 3000);
+      }else{
+        setShowMessageError(true)
+        setTimeout(() => setShowMessageError(false), 3000);
       }
 
     } catch (e) {
@@ -73,6 +79,8 @@ export default function ModalAddAuthor({ isOpen, onClose, onAuthorAdded }: any) 
               <>
                 <ModalHeader className="flex flex-col gap-1 text-lg">
                   Adicionar Autor
+                  {showMessageConfimation && <p className="text-green-600 text-sm fixed mt-7">{messageConfirmation}</p>}
+                  {showMessageError && <p className="text-red-600 text-sm fixed mt-7">{messageError}</p>}
                 </ModalHeader>
                 <ModalBody>
 

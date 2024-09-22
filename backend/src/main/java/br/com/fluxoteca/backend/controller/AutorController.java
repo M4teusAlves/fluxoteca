@@ -43,6 +43,11 @@ public class AutorController {
     @Operation(summary = "Cria um autor")
     public ResponseEntity<AutorResponseDto> criar(@RequestBody @Valid CriacaoAutorDto data, UriComponentsBuilder uriBuilder){
         Autor autor = new Autor();
+
+
+        if(autorRepository.existsByNome(data.nome()))
+            return ResponseEntity.badRequest().build();
+
         BeanUtils.copyProperties(data, autor);
 
         autorRepository.save(autor);
