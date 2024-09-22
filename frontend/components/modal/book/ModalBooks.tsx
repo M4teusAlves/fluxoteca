@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem } from "@nextui-org/react";
+import React, { useRef, useState, useEffect, Key } from "react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalAddAuthor from "./ModalAutor";
 import ModalAddCategory from "./ModalCategoria";
@@ -16,8 +16,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
   const [name, setName] = useState('');
   const [observation, setObservation] = useState('');
-  const [author, setAuthor] = useState('');
-  const [category, setCategory] = useState('');
+  const [author, setAuthor] = useState<Key>('');
+  const [category, setCategory] = useState<Key>('');
 
   // Get token
   const token = useJwtToken();
@@ -62,15 +62,15 @@ export default function ModalBooks({ isOpen, onClose }: any) {
       newErrors.nome = 'Campo obrigatório.';
     }
 
-    if (!author) {
+    if (author===0) {
       newErrors.autor = 'Campo obrigatório.';
     }
 
-    if (!category) {
+    if (category===0) {
       newErrors.categoria = 'Campo obrigatório.';
     }
 
-    if (!observation){
+    if (observation.length>200){
       newErrors.observation = 'Campo obrigatório'
     }
 
@@ -97,8 +97,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
       const book = {
         nome: name,
-        categoria: parseInt(category),
-        autor: parseInt(author),
+        categoria: parseInt(category.toString()),
+        autor: parseInt(author.toString()),
         observacao: observation
       };
 
@@ -156,37 +156,39 @@ export default function ModalBooks({ isOpen, onClose }: any) {
 
                   <div> {/* Author Input */}
                     {errors.autor && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.autor}</p>}
-                    <Select
+                    <Autocomplete
                       label="Autor"
                       placeholder="Selecione o autor"
                       variant="bordered"
-                      value={author}
-                      onChange={(e) => setAuthor(e.target.value)}
+                      defaultItems={authors}
+                      allowsCustomValue={true}
+                      onSelectionChange = {(id) => {setAuthor(id)}}
                     >
-                      {authors.map((author, index) => (
-                        <SelectItem key={author.id} value={author.id}>
-                          {author.nome}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                      {(item) =>
+                        <AutocompleteItem key={item.id.toString()}>
+                          {item.nome}
+                        </AutocompleteItem>
+                      }
+                    </Autocomplete>
                     <Button onPress={() => setShowAddAuthorModal(true)}>Adicionar Autor</Button>
                   </div>
 
                   <div> {/* Category Input */}
                     {errors.categoria && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.categoria}</p>}
-                    <Select
+                    <Autocomplete
                       label="Categoria"
                       placeholder="Selecione a categoria"
                       variant="bordered"
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
+                      defaultItems={categories}
+                      allowsCustomValue={true}
+                      onSelectionChange = {(id) => {setCategory(id)}}
                     >
-                      {categories.map((category, index) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.nome}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                      {(item) =>
+                        <AutocompleteItem key={item.id.toString()}>
+                          {item.nome}
+                        </AutocompleteItem>
+                      }
+                    </Autocomplete>
                     <Button onPress={() => setShowAddCategoryModal(true)}>Adicionar Categoria</Button>
                   </div>
                   <div> {/* Observation Input */}

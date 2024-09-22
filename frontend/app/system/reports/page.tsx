@@ -3,6 +3,7 @@ import DailyRegisterList from "@/components/reports/DailyRegisterList";
 import ReportCard from "@/components/reports/ReportCard";
 import { fetchReport } from "@/components/reports/dataReports";
 import { useJwtToken } from "@/hooks/useJwtToken";
+import { useLogin } from "@/hooks/useLogin";
 import {ScrollShadow } from "@nextui-org/react"
 import {Accordion, AccordionItem} from "@nextui-org/react";
 import { fetchData } from "next-auth/client/_utils";
@@ -13,6 +14,8 @@ import { useEffect, useState } from "react";
 export default function Reports(){
 
     const router = useRouter();
+
+    const login = useLogin();
 
     const token = useJwtToken();
     const [report, setReport] = useState<report | undefined>(undefined);
@@ -35,8 +38,9 @@ export default function Reports(){
 
     return(
         <div className="flex w-full flex-col p-5 gap-7">
-            <header>
+            <header className="flex p-4 justify-between items-center">
                 <h1 className="text-2xl">Relatório Semestral</h1>
+                <p className="text-xl font-bold">Usuário: {login}</p>
             </header>
             <main className="flex justify-center gap-8" onChange={()=>{fetchData}}>
                 <DailyRegisterList setReport={setReport}/>

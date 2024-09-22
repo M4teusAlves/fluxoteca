@@ -17,6 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className="light">
+      <head>
+      <link
+        rel="apple-touch-icon"
+        href="/public/logo.png"
+        type="image/<generated>"
+        sizes="<generated>"
+      />
+      </head>
       <body className={inter.className}>
         <Providers>
           {children}
