@@ -3,6 +3,8 @@
 export async function updateStateRegister(token: any, router:any){
     try {
 
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa")
+
         if (!token) {
           router.push("/signin")
           alert('Token de autenticação não encontrado');

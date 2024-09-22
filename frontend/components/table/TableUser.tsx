@@ -32,7 +32,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "fone", "email", "afiliacao", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["nome", "telefone", "email", "afiliacao", "actions"];
 
 type User = {
   id: number,
@@ -140,26 +140,20 @@ export default function TableUser() {
     const cellValue = user[columnKey as keyof User];
 
     switch (columnKey) {
-      case "name":
+      case "nome":
         return (<span>{user.nome}</span>);
-      case "fone":
+      case "telefone":
         return (<span>{user.telefone}</span>);
       case "afiliacao":
           return (<span>{user.afiliacao}</span>);
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Editar Leitores" onPress={() => {
               setCurrentUserID(user.id)
               handleClickEditUser()
             }}>
               <EditIcon className="text-[#7B6ED6]" />
-            </Button>
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
-              setCurrentUserID(user.id)
-              handleClickEditUser()
-            }}>
-              <Delete className="text-[#7B6ED6]" />
             </Button>
           </div>
         );
@@ -269,7 +263,7 @@ export default function TableUser() {
             <TableColumn
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
+              allowsSorting
             >
               {column.name}
             </TableColumn>

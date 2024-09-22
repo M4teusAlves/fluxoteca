@@ -187,19 +187,19 @@ export default function TableRegister() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Visualizar Empréstimo" onPress={() => {
               setCurrentRegister(register);
               handleClickViewRegister();
             }}>
               <VisibilityOutlinedIcon className="text-[#7B6ED6]" />
             </Button>
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Renovar Empréstimo" onPress={() => {
               setCurrentRegisterID(register.id);
               handleClickEditRegister();
             }}>
               <CalendarMonthIcon className="text-[#7B6ED6]" />
             </Button>
-            <Button isIconOnly size="sm" variant="bordered" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Finalizar Empréstimo" onPress={() => {
               setCurrentRegisterID(register.id);
               handleClickEndRegister();
             }}>

@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem } from "@nextui-org/react";
+import React, { useRef, useState, useEffect, Key } from "react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 
 import { DateTime } from "next-auth/providers/kakao";
@@ -14,9 +14,9 @@ export default function ModalRegister({ isOpen, onClose }: any) {
   const [books, setBooks] = useState<Array<{ id: string; nome: string; categoria: string; autor: string; status: string; exemplares: exemplar[] }>>([]);
   const [exemplares, setExemplares] = useState<exemplar[]>([])
 
-  const [name, setName] = useState('');
-  const [livro, setBook] = useState('');
-  const [exemplar, setExemplar] = useState('');
+  const [name, setName] = useState<Key>('');
+  const [livro, setBook] = useState<Key>('');
+  const [exemplar, setExemplar] = useState<Key>('');
   
 
   const today = new Date();
@@ -64,10 +64,10 @@ export default function ModalRegister({ isOpen, onClose }: any) {
     fetchData();
   }, [token]);
 
-  const handleSelectBook = async (livroID: string) => {
+  const handleSelectBook = async (livroID: Key) => {
     console.log(livroID)
       try {
-        const resExemplar = await fetch(`http://localhost:8081/exemplares/livro/${livroID}`, {
+        const resExemplar = await fetch(`http://localhost:8081/exemplares/livro/${livroID.toString()}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
 
         const register = {
           exemplar: exemplar,
-          leitor: parseInt(name),
+          leitor: parseInt(name.toString()),
           dataDevolucao: deliveryDate,
         };
 
@@ -164,55 +164,60 @@ export default function ModalRegister({ isOpen, onClose }: any) {
 
                     <div> {/* Author Input */}
                       {errors.nomeLeitor && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.nomeLeitor}</p>}
-                      <Select
+                      <Autocomplete
                         label="Leitor"
                         placeholder="Selecione o nome do leitor"
                         variant="bordered"
-                        // value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        defaultItems={authors}
+                        onSelectionChange = {(id) => {setName(id)}}
                       >
-                        {authors.map((author, index) => (
-                          <SelectItem key={author.id} value={author.id}>
-                            {author.nome}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                        {(item) =>
+
+                          <AutocompleteItem key={item.id.toString()}>
+                            {item.nome}
+                          </AutocompleteItem>
+                        }
+                      </Autocomplete>
 
                     </div>
 
                     <div> {/* Livro Input */}
                       {errors.nomeLivro && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.nomeLivro}</p>}
-                      <Select
+                      <Autocomplete
                         label="Livro"
                         placeholder="Selecione o Livro"
                         variant="bordered"
-                        value={livro}
-                        onChange={(e) => { setBook(e.target.value)}}
+                        defaultItems={books}
+                        allowsCustomValue={true}
+                        onSelectionChange = {(id) => {setBook(id); handleSelectBook(id)}}
                       >
-                        {books.map((livro) => (
-                          <SelectItem key={livro.id} value={livro.id} onPress={(e) => {handleSelectBook(livro.id)}}>
-                            {livro.nome}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                        {(item) =>
+                          <AutocompleteItem key={item.id.toString()}>
+                            {item.nome}
+                          </AutocompleteItem>
+                        }
+                      </Autocomplete>
                     </div>
 
-                    {exemplares.length>0 &&
+                    {exemplares.filter((exemplar) => exemplar.estado=="DISPONIVEL").length>0 &&
                       <div> {/* Exemplar Input */}
                         {errors.nomeExemplar && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.nomeExemplar}</p>}
-                        <Select
+                        <Autocomplete
                           label="Exemplar"
                           placeholder="Selecione um Exemplar"
                           variant="bordered"
-                          // value={exemplar}
-                          onChange={(e) => setExemplar(e.target.value)}
+                          allowsCustomValue={true}
+                          defaultItems={exemplares.filter((exemplar) => exemplar.estado=="DISPONIVEL")}
+                          onSelectionChange = {(id) => {setExemplar(id)}}
                         >
-                          {exemplares.filter(exemplar=>(exemplar.estado==="DISPONIVEL")).map((exemplar: exemplar) => (
-                            <SelectItem key={exemplar.id} value={exemplar.id}>
-                              {exemplar.id}
-                            </SelectItem>
-                          ))}
-                        </Select>
+                          {(item) =>
+
+                              <AutocompleteItem key={item.id.toString()}>
+                                {item.id}
+                              </AutocompleteItem>
+                            
+                          }
+                        </Autocomplete>
                       </div>
                     }
 

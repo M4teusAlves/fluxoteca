@@ -2,11 +2,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Input } from '@nextui-org/react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export function SignupForm() {
   const [login, setLogin] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [classe, setClasse] = useState('');
   const [senha, setSenha] = useState('');
   const [errors, setErrors] = useState<{ login?: string; senha?: string }>({});
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const router = useRouter();
 
@@ -31,7 +39,7 @@ export function SignupForm() {
     }
 
     if (senha.length < 5 || senha.length > 30){
-        newErrors.senha= 'Login precisa ter de 8 a 30 caracteres'
+        newErrors.senha= 'Senha precisa ter de 8 a 30 caracteres'
     }
 
     setErrors(newErrors);
@@ -52,11 +60,13 @@ export function SignupForm() {
         body: JSON.stringify({ login, senha }),
       });
 
-      if (response.status !== 201) 
-        alert('Credenciais inválidas');
-
-      if(response.status === 201)
-        alert('Usuário Criado com sucesso')  
+      if(response.status == 201){
+        setMensagem('Usuário Criado com sucesso')
+        setClasse("text-sm text-green-600")
+      }else{
+        setMensagem("Credenciais Inválidas")
+        setClasse("text-red-600 text-sm")
+      }
       
       setLogin('')
       setSenha('')
@@ -70,32 +80,42 @@ export function SignupForm() {
   return (
     <div className="w-full max-w-md">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <p className={classe}>{mensagem}</p>
         <div>
-          <label htmlFor="login" className="text-sm text-gray-600">USUÁRIO</label>
-          <input
+          <Input
             id="login"
             name="login"
             minLength={5}
             maxLength={20}
+            variant='bordered'
+            label="Usuário"
             placeholder="Digite um login de administrador"
-            className="block w-full appearance-none rounded border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black "
             value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            onChange={(e) => {setLogin(e.target.value); validateForm()}}
           />
           {errors.login && <p className="text-red-500 text-xs pt-0.5 pl-1 fixed">{errors.login}</p>}
         </div>
         <div>
-          <label htmlFor="password" className="text-sm text-gray-600">SENHA</label>
-          <input
+          <Input
             id="password"
             name="password"
-            type="password"
+            label="Senha"
+            variant='bordered'
             minLength={8}
             maxLength={30}
             placeholder="Digite a senha de administrador"
-            className="block w-full appearance-none rounded border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black"
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            onChange={(e) => {setSenha(e.target.value), validateForm()}}
+            endContent={
+              <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
+                {isVisible ? (
+                  <VisibilityOff className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <Visibility className="text-2xl text-default-400 pointer-events-none" />
+                )}
+              </button>
+            }
+            type={isVisible ? "text" : "password"}
           />
           {errors.senha && <p className="text-red-500 text-xs pt-0.5 pl-1 fixed">{errors.senha}</p>}
         </div>

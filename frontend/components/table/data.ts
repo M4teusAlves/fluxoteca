@@ -1,8 +1,8 @@
 
 const columns = [
   // {name: "ID", uid: "id", sortable: true},
-  {name: "NOME", uid: "name", sortable: true},
-  {name: "TELEFONE", uid: "fone", sortable: true},
+  {name: "NOME", uid: "nome", sortable: true},
+  {name: "TELEFONE", uid: "telefone", sortable: true},
   {name: "EMAIL", uid: "email"},
   {name: "AFILIAÇÃO", uid: "afiliacao", sortable: true},
   // {name: "STATUS", uid: "status", sortable: true},

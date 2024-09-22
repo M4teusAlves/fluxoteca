@@ -287,6 +287,7 @@ export default function TableBook() {
     onRowsPerPageChange,
     books.length,
     hasSearchFilter,
+    tipo,
   ]);
 
   const bottomContent = React.useMemo(() => {
