@@ -10,4 +10,6 @@ public interface AutorRepository extends JpaRepository<Autor,Long>{
     
     List<Autor> findByStatus(boolean status);
 
+    boolean existsByNome(String nome);
+
 }

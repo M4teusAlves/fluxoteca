@@ -44,6 +44,9 @@ public class CategoriaController {
         Categoria categoria = new Categoria();
         BeanUtils.copyProperties(data, categoria);
 
+        if(categoriaRepository.existsByNome(data.nome()))
+            return ResponseEntity.badRequest().build();
+
         categoriaRepository.save(categoria);
 
         var uri = uriBuilder.path("categorias/{id}").buildAndExpand(categoria.getId()).toUri();

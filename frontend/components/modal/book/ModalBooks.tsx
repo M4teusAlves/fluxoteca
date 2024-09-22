@@ -13,6 +13,7 @@ export default function ModalBooks({ isOpen, onClose }: any) {
   const [categories, setCategories] = useState<Array<{ id: number | string, nome?: string }>>([]);
   const [showAddAuthorModal, setShowAddAuthorModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [name, setName] = useState('');
   const [observation, setObservation] = useState('');
@@ -26,6 +27,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+        setIsLoading(true)
         const resAuthors = await fetch('http://localhost:8081/autores', {
           method: 'GET',
           headers: {
@@ -46,13 +49,14 @@ export default function ModalBooks({ isOpen, onClose }: any) {
           setAuthors(dataAuthors);
           setCategories(dataCategories);
         }
+        setIsLoading(false)
       } catch (error) {
         console.error("Error fetching authors or categories:", error);
       }
     };
 
     fetchData();
-  }, [token, authors, categories]);
+  }, [token, authors, categories, isLoading]);
 
   // Validate form fields
   const validateForm = () => {
@@ -218,16 +222,8 @@ export default function ModalBooks({ isOpen, onClose }: any) {
           </ModalContent>
         </form>
       </Modal>
-      {showAddAuthorModal && <ModalAddAuthor isOpen={showAddAuthorModal} onClose={() => setShowAddAuthorModal(false)} onAuthorAdded={(authorName: any) => {
-        setAuthors([...authors, authorName]);
-        setAuthor(authorName);
-        setShowAddAuthorModal(false);
-      }} />}
-      {showAddCategoryModal && <ModalAddCategory isOpen={showAddCategoryModal} onClose={() => setShowAddCategoryModal(false)} onCategoryAdded={(categoryName: any) => {
-        setCategories([...categories, categoryName]);
-        setCategory(categoryName);
-        setShowAddCategoryModal(false);
-      }} />}
+      {showAddAuthorModal && <ModalAddAuthor isOpen={showAddAuthorModal} onClose={() => {setShowAddAuthorModal(false); setIsLoading(true)}} />}
+      {showAddCategoryModal && <ModalAddCategory isOpen={showAddCategoryModal} onClose={() => {setShowAddCategoryModal(false); setIsLoading(true)}} />}
     </>
   );
 }
