@@ -169,6 +169,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                         placeholder="Selecione o nome do leitor"
                         variant="bordered"
                         defaultItems={authors}
+                        allowsCustomValue={true}
                         onSelectionChange = {(id) => {setName(id)}}
                       >
                         {(item) =>
@@ -187,7 +188,7 @@ export default function ModalRegister({ isOpen, onClose }: any) {
                         label="Livro"
                         placeholder="Selecione o Livro"
                         variant="bordered"
-                        defaultItems={books}
+                        defaultItems={books.filter((book)=> book.exemplares.length>0)}
                         allowsCustomValue={true}
                         onSelectionChange = {(id) => {setBook(id); handleSelectBook(id)}}
                       >

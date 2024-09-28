@@ -9,15 +9,40 @@ import { useRouter } from 'next/navigation'
 export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
   const [exemplarID, setExemplarID] = useState('');
   const [location, setLocation] = useState('');
+  const [errors, setErrors] = useState<{ id?: string }>({});
+  const [showMessageConfimation, setShowMessageConfirmation] = useState(false);
+  const messageConfirmation = 'Cadastrado com sucesso.';
+  const [showMessageError, setShowMessageError] = useState(false);
+  const messageError = 'Exemplar já cadastrado.';
 
   // Get token
   const token = useJwtToken();
+
+
+  const validateForm = () => {
+    const newErrors = {} as { id?: string };
+
+    if (!exemplarID) {
+      newErrors.id = 'Campo obrigatório.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   async function handleAddExemplar() {
     try {
       if (!token) {
         alert('Ação não permitida pelo usuário!');
         return;
+      }
+
+      if(!validateForm()){
+        return
+      }
+
+      if(location.length===0){
+          setLocation("Padrão")
       }
 
       const exemplar = {
@@ -38,7 +63,11 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
       });
 
       if (res.ok) {
-        onClose();
+        setShowMessageConfirmation(true)
+        setTimeout(() => setShowMessageConfirmation(false), 3000);
+      }else{
+        setShowMessageError(true)
+        setTimeout(() => setShowMessageError(false), 3000);
       }
 
     } catch (e) {
@@ -54,19 +83,21 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
             <>
               <ModalHeader className="flex flex-col gap-1 text-lg">
                 Cadastro de exemplar
+                {showMessageConfimation && <p className="text-green-600 text-sm fixed mt-7">{messageConfirmation}</p>}
+                {showMessageError && <p className="text-red-600 text-sm fixed mt-7">{messageError}</p>}
               </ModalHeader>
               <ModalBody>
 
                 <div> {/* Exemplar ID Input */}
-                  {/* {errors.name && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.name}</p>} */}
+                  {errors.id && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.id}</p>}
                   <Input
                     autoFocus
                     label="Identificador do exemplar"
-                    type="text"
+                    type="number"
                     placeholder="Digite o identificador"
                     variant="bordered"
                     // value={exemplarID}
-                    onChange={(e) => setExemplarID(e.target.value)}
+                    onChange={(e) => setExemplarID(e.target.value.toString())}
                   />
                 </div>
 
@@ -85,7 +116,10 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
 
               </ModalBody>
               <ModalFooter className="flex flex-row justify-end">
-                <Button color="danger" variant="flat" onPress={handleAddExemplar}>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Cancelar
+                </Button>
+                <Button color="primary" variant="flat" onPress={handleAddExemplar}>
                   Adicionar
                 </Button>
               </ModalFooter>

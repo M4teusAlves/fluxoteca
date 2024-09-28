@@ -28,13 +28,13 @@ export default function ModalEndRegister({ isOpen, onClose, registerID }: IModal
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1 text-lg">
-                  Finalizar empréstimo
+                  Concluir Devolução
                   {showMessage && <p className="text-green-600 text-sm fixed mt-7">{messageConfirmation}</p>}
                 </ModalHeader>
                 <ModalBody>
 
                   <div> 
-                    <p>Confirmar a finalização do empréstimo</p>
+                    <p>Confirmar a Devolução</p>
                   </div>
 
                 </ModalBody>
@@ -47,7 +47,7 @@ export default function ModalEndRegister({ isOpen, onClose, registerID }: IModal
                     setShowMessage(true)
                     setTimeout(() => handleClose(), 1000);
                     }}>
-                    Finalizar
+                    Concluir
                   </Button>
                 </ModalFooter>
               </>

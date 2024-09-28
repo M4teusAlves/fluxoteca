@@ -22,11 +22,11 @@ export default function ModalFinishRegister({ isOpen, onClose, registerId }: any
                 {(onClose) => (
                     <>
                     <ModalHeader className="flex flex-col gap-1 text-lg">
-                        Finalizar Empréstimo
+                        Concluir Devolução
                     </ModalHeader>
                     <ModalBody>
 
-                    <p>TEM CERTEZA QUE DESEJA FINALIZAR ESSE EMPRÉSTIMO? </p>
+                    <p>TEM CERTEZA QUE DESEJA  ESSE EMPRÉSTIMO? </p>
 
                     </ModalBody>
                     <ModalFooter className="flex flex-row justify-end">

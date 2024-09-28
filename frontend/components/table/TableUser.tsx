@@ -32,7 +32,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["nome", "telefone", "email", "afiliacao", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["nome", "telefone", "email", "filiacao", "actions"];
 
 type User = {
   id: number,
@@ -144,7 +144,7 @@ export default function TableUser() {
         return (<span>{user.nome}</span>);
       case "telefone":
         return (<span>{user.telefone}</span>);
-      case "afiliacao":
+      case "filiacao":
           return (<span>{user.afiliacao}</span>);
       case "actions":
         return (

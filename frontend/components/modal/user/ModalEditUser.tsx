@@ -214,8 +214,8 @@ export default function ModalEditUser({ isOpen, onClose, userID }: any) {
                     {errors.afiliacao && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.afiliacao}</p>}
                     <Input
                       value={userData.afiliacao}
-                      label="Afiliação"
-                      placeholder="Digite a afiliação"
+                      label="Filiação"
+                      placeholder="Digite a filiação"
                       variant="bordered"
                       name="afiliacao"
                       onChange={(e) => setUserData({ ...userData, afiliacao: e.target.value })}
