@@ -74,10 +74,6 @@ export default function ModalBooks({ isOpen, onClose }: any) {
       newErrors.categoria = 'Campo obrigatório.';
     }
 
-    if (observation.length>200){
-      newErrors.observation = 'Campo obrigatório'
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

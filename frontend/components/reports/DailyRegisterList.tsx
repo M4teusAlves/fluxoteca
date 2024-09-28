@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { fetchFinishRegister, fetchRegisters, fetchReport, updateStateRegister } from "./dataReports";
 import ModalFinishRegister from "../modal/register/ModalFinishRegister";
+import ModalEndRegister from "../modal/register/ModalEndRegister";
 
 interface prop {
   setReport:React.Dispatch<React.SetStateAction<report|undefined>>
@@ -18,10 +19,10 @@ export default function DailyRegisterList({setReport}:prop){
     const token = useJwtToken();
     const [registers, setRegisters] = useState<register[]>([]);
     const [register, setRegister] = useState<register>();
-    const [showModalFinishRegister, setShowModalFinishRegister] = useState(false);
+    const [showModalEndRegister, setShowModalEndRegister] = useState(false);
 
-    const handleClickFinishRegister = () => {
-      setShowModalFinishRegister(true);
+    const handleClickEndRegister = () => {
+      setShowModalEndRegister(true);
     }
 
     async function updateReport() {
@@ -55,12 +56,12 @@ export default function DailyRegisterList({setReport}:prop){
             <p className="w-full text-center border-b-2 border-gray-300 p-2">Empréstimos que vencem hoje</p>
             <ScrollShadow className="w-full h-[35rem] flex flex-col">
                 {registers.length === 0 &&
-                    <p className="mt-11 w-full text-center">Não há espréstimos para hoje</p>
+                    <p className="mt-11 w-full text-center">Não há empréstimos para hoje</p>
                 }
                 <Accordion variant="splitted">
                   {registers.map((register)=>(
                     <AccordionItem key={register.id} title={register.leitor.nome}>
-                      <b>Afiliação</b>
+                      <b>Filiação</b>
                       <p>{register.leitor.afiliacao}</p>
                       <b>Contato</b>
                       <p>{register.leitor.email}</p>
@@ -70,19 +71,19 @@ export default function DailyRegisterList({setReport}:prop){
                       <b>Localização</b>
                       <p>{register.exemplar.localizacao}</p>
                       <Button color="primary" onClick={()=>{
-                        handleClickFinishRegister()
+                        handleClickEndRegister()
                         setRegister(register)
                       }}>
-                        Finalizar
+                        Devolução
                       </Button>
                     </AccordionItem>
                   ))}
                 </Accordion>
-                {showModalFinishRegister && <ModalFinishRegister isOpen={showModalFinishRegister} onClose={() => {
-                  setShowModalFinishRegister(false)
-                  updateReport()
-                  setIsLoading(true)
-                }} registerId={register?.id}/>}
+                {showModalEndRegister && <ModalEndRegister isOpen={showModalEndRegister} onClose={() => {
+                setShowModalEndRegister(false);
+                updateReport();
+                setIsLoading(true);
+              } } registerID={register!.id} />}
                 
             </ScrollShadow>
         </div>

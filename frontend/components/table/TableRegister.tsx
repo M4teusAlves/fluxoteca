@@ -199,7 +199,7 @@ export default function TableRegister() {
             }}>
               <CalendarMonthIcon className="text-[#7B6ED6]" />
             </Button>
-            <Button isIconOnly size="sm" variant="bordered" title="Finalizar Empréstimo" onPress={() => {
+            <Button isIconOnly size="sm" variant="bordered" title="Devolução" onPress={() => {
               setCurrentRegisterID(register.id);
               handleClickEndRegister();
             }}>

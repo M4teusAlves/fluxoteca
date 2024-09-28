@@ -45,11 +45,11 @@ export default function ModalUser({ isOpen, onClose }: any) {
     if (!form.get('endereco')) {
       newErrors.endereco = 'Campo obrigatório.'
     }
-    if (!form.get('email')) {
-      newErrors.email = 'Campo obrigatório.'
-    } else if (!validateEmail(form.get('email')!.toString())) {
-      newErrors.email = 'Email inválido.'
-    }
+    if (form.get('email')) {
+      if (!validateEmail(form.get('email')!.toString())) {
+        newErrors.email = 'Email inválido.'
+      }
+    } 
     if (!form.get('afiliacao')) {
       newErrors.afiliacao = 'Campo obrigatório.'
     }
@@ -84,10 +84,16 @@ export default function ModalUser({ isOpen, onClose }: any) {
         return;
       }
 
+      let email = form.get('email')
+
+      if (!form.get('email')) {
+        email = "leitor@email.com"
+      }
+
       const user = {
         nome: form.get('nome'),
         endereco: form.get('endereco'),
-        email: form.get('email'),
+        email: email,
         afiliacao: form.get('afiliacao'),
         dataNascimento: form.get('dataNascimento'),
         telefone: form.get('telefone'),
@@ -161,8 +167,8 @@ export default function ModalUser({ isOpen, onClose }: any) {
                   <div> {/* Affiliation Input */}
                     {errors.afiliacao && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.afiliacao}</p>}
                     <Input
-                      label="Afiliação"
-                      placeholder="Digite a afiliação"
+                      label="Filiação"
+                      placeholder="Digite a Filiação"
                       variant="bordered"
                       name="afiliacao"
                     />

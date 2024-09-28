@@ -89,7 +89,7 @@ export default function ModalExemplarList({ isOpen, onClose, bookID }: any){
 
                             <Accordion variant="splitted">
                                 {exemplars.map((exemplar)=>(
-                                    <AccordionItem key={exemplar.id} title={exemplar.id}>
+                                    <AccordionItem key={exemplar.id} title={`${exemplar.id} - ${exemplar.estado}`}>
                                         <b>Livro</b>
                                         <p>{exemplar.livro.nome}</p>
                                         <b>Localização</b>
