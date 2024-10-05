@@ -41,9 +41,6 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
         return
       }
 
-      if(location.length===0){
-          setLocation("Padrão")
-      }
 
       const exemplar = {
         id: exemplarID,
@@ -51,7 +48,9 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
         localizacao: location
       };
 
-      console.log(exemplar)
+      if(exemplar.localizacao.length<=0)
+          exemplar.localizacao = "Padrão"
+
 
       const res = await fetch('http://localhost:8081/exemplares', {
         method: 'POST',
