@@ -68,7 +68,6 @@ export default function ModalUpdateExemplar({ isOpen, onClose, exemplarID }: any
           };
     
           const exemplarJSON = JSON.stringify(exemplar);
-          console.log(exemplarJSON)
 
           setLoading(true)
     

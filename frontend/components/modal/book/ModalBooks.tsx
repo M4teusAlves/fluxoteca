@@ -102,7 +102,6 @@ export default function ModalBooks({ isOpen, onClose }: any) {
         observacao: observation
       };
 
-      console.log(book)
 
       const res = await fetch('http://localhost:8081/livros', {
         method: 'POST',
