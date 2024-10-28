@@ -40,4 +40,10 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long>{
 
     @Query("select em from Emprestimo em where em.leitor=:leitor and status=true order by em.dataCriacao desc")
     List<Emprestimo> findActiveByLeitor(@Param("leitor")Leitor leitor);
+
+    @Query("select em from Emprestimo em where em.exemplar.livro=:livro and status=true order by em.dataCriacao desc")
+    List<Emprestimo> findActiveByLivro(@Param("livro")Livro livro);
+
+    @Query(value = "select avg(em.data_modificacao - em.data_criacao) from public.emprestimos em join public.exemplares e on e.id = em.exemplar_id where e.livro_id=:livro and em.estado=3 and em.status=true", nativeQuery=true)
+    Long findAverageByLivro(@Param("livro")Long livro);
 }

@@ -19,12 +19,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.fluxoteca.backend.dto.Emprestimo.AtualizacaoEmprestimoDto;
 import br.com.fluxoteca.backend.dto.Emprestimo.CriacaoEmprestimoDto;
 import br.com.fluxoteca.backend.dto.Emprestimo.EmprestimoResponseDto;
+import br.com.fluxoteca.backend.dto.Historico.HistoricoLivroDto;
 import br.com.fluxoteca.backend.model.Emprestimo;
 import br.com.fluxoteca.backend.model.enums.Estado;
 import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
 import br.com.fluxoteca.backend.repository.EmprestimoRepository;
 import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
+import br.com.fluxoteca.backend.repository.LivroRepository;
 import br.com.fluxoteca.backend.service.HistoricoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,6 +48,9 @@ public class EmprestimoController {
 
     @Autowired
     private LeitorRepository leitorRepository;
+
+    @Autowired
+    private LivroRepository livroRepository;
 
     @Autowired
     private HistoricoService historicoService;
@@ -124,6 +129,7 @@ public class EmprestimoController {
 
     @GetMapping("leitor/historico/{id}")
     @Transactional
+    @Operation(summary = "Gera o histórico de empréstimos do leitor")
     public ResponseEntity<List<EmprestimoResponseDto>> geraHistoricoLeitor (@PathVariable Long id) {
 
         var leitor = leitorRepository.getReferenceById(id);
@@ -132,6 +138,21 @@ public class EmprestimoController {
             return ResponseEntity.notFound().build();
 
         var historico = historicoService.historicoLeitor(leitor);
+
+        return ResponseEntity.ok(historico);
+    }
+
+    @GetMapping("livro/historico/{id}")
+    @Transactional
+    @Operation(summary = "Gera o histórico de empréstimos do livro")
+    public ResponseEntity<HistoricoLivroDto> geraHistoricoLivro (@PathVariable Long id) {
+
+        var livro = livroRepository.getReferenceById(id);
+        
+        if(livro == null)
+            return ResponseEntity.notFound().build();
+
+        var historico = historicoService.historicoLivro(livro);
 
         return ResponseEntity.ok(historico);
     }

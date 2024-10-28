@@ -15,7 +15,8 @@ type register = {
     dataModificacao: Date
 }
 
-type historyReader = {
+type bookHistory = {
+    media:number,
     emprestimos:register[]
 }
 
