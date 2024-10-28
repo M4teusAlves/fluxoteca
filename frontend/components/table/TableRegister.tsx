@@ -155,9 +155,8 @@ export default function TableRegister() {
     ATRASADO: 'ATRASADO'
   };
 
-  const formatDate = (dateString: string) => {
-    const data = parseISO(dateString);
-    return format(data, 'dd-MM-yyyy');
+  const formatDate = (date: Date) => {
+    return format(date, 'dd/MM/yyyy');
   };
 
   const renderCell = useCallback((register: register, columnKey: React.Key) => {

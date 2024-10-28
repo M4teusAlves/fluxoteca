@@ -11,6 +11,7 @@ import br.com.fluxoteca.backend.model.Livro;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
 
 
@@ -36,4 +37,7 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long>{
 
     @Query("select l from Emprestimo em join em.leitor l where em.status=true and em.dataCriacao between :inicio and :fim group by l.id order by count(l.id) desc limit 1")
     Leitor findMostFrequentReader(@Param("inicio")LocalDate inicio, @Param("fim")LocalDate fim);
+
+    @Query("select em from Emprestimo em where em.leitor=:leitor and status=true order by em.dataCriacao desc")
+    List<Emprestimo> findActiveByLeitor(@Param("leitor")Leitor leitor);
 }

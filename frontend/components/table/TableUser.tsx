@@ -25,7 +25,9 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useJwtToken } from "@/hooks/useJwtToken";
 import ModalAddUser from "../modal/user/ModalAddUser";
 import ModalEditUser from "../modal/user/ModalEditUser";
-import { Delete } from "@mui/icons-material";
+import { Delete, History } from "@mui/icons-material";
+import { ListItemIcon } from "@mui/material";
+import ModalHistoryReader from "../modal/user/ModalHistoryReader";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -71,6 +73,7 @@ export default function TableUser() {
 
   const [showModalAddUser, setShowModalAddUser] = useState(false);
   const [showModalEditUser, setShowModalEditUser] = useState(false);
+  const [showModalHistoryReader, setShowModalHistoryReader] = useState(false);
 
   const handleClickAddUser = () => {
     setShowModalAddUser(true);
@@ -78,6 +81,10 @@ export default function TableUser() {
 
   const handleClickEditUser = () => {
     setShowModalEditUser(true)
+  }
+
+  const handleClickHistoryReader = () => {
+    setShowModalHistoryReader(true)
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -154,6 +161,12 @@ export default function TableUser() {
               handleClickEditUser()
             }}>
               <EditIcon className="text-[#7B6ED6]" />
+            </Button>
+            <Button isIconOnly size="sm" variant="bordered" title="Histórico" onPress={() => {
+              setCurrentUserID(user.id)
+              handleClickHistoryReader()
+            }}>
+              <History className="text-[#7B6ED6]" />
             </Button>
           </div>
         );
@@ -285,6 +298,10 @@ export default function TableUser() {
       {/* Condicional para mostrar modal de editar dados do leitor */}
       {showModalEditUser && <ModalEditUser isOpen={showModalEditUser} onClose={() => {
         setShowModalEditUser(false)
+        setIsLoading(true);
+      }} userID={currentUserID}/>}
+      {showModalHistoryReader && <ModalHistoryReader isOpen={showModalHistoryReader} onClose={() => {
+        setShowModalHistoryReader(false)
         setIsLoading(true);
       }} userID={currentUserID}/>}
     </main>
