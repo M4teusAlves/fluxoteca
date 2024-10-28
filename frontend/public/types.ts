@@ -8,9 +8,15 @@ type register = {
     id:number,
     exemplar: exemplar,
     leitor: leitor,
-    dataDevolucao: string,
+    dataDevolucao: Date,
     estado:string,
-    status:boolean
+    status:boolean,
+    dataCriacao: Date,
+    dataModificacao: Date
+}
+
+type historyReader = {
+    emprestimos:register[]
 }
 
 type exemplar = {

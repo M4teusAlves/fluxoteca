@@ -25,11 +25,11 @@ import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
 import br.com.fluxoteca.backend.repository.EmprestimoRepository;
 import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LeitorRepository;
+import br.com.fluxoteca.backend.service.HistoricoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-
 
 
 @RestController
@@ -46,6 +46,9 @@ public class EmprestimoController {
 
     @Autowired
     private LeitorRepository leitorRepository;
+
+    @Autowired
+    private HistoricoService historicoService;
 
 
     @PostMapping
@@ -119,6 +122,21 @@ public class EmprestimoController {
         return ResponseEntity.ok(emprestimosList);
     }
 
+    @GetMapping("leitor/historico/{id}")
+    @Transactional
+    public ResponseEntity<List<EmprestimoResponseDto>> geraHistoricoLeitor (@PathVariable Long id) {
+
+        var leitor = leitorRepository.getReferenceById(id);
+        
+        if(leitor == null)
+            return ResponseEntity.notFound().build();
+
+        var historico = historicoService.historicoLeitor(leitor);
+
+        return ResponseEntity.ok(historico);
+    }
+    
+
     @PutMapping
     @Transactional
     @Operation(summary = "Atualiza um empréstimo")
@@ -164,15 +182,6 @@ public class EmprestimoController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    @Transactional
-    @Operation(summary = "Deleta um empréstimo")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
-        var emprestimo = emprestimoRepository.getReferenceById(id);
-        emprestimo.inativar();
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "Reativa um empréstimo")
@@ -189,5 +198,18 @@ public class EmprestimoController {
         emprestimoRepository.findToValidation().stream().forEach((emprestimo) -> { emprestimo.atualizarEstado(); });
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    @Operation(summary = "Deleta um empréstimo")
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
+        var emprestimo = emprestimoRepository.getReferenceById(id);
+        emprestimo.inativar();
+        return ResponseEntity.noContent().build();
+    }
+
+    
+
+
 
 }

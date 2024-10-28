@@ -13,11 +13,13 @@ public record EmprestimoResponseDto(
     LeitorResponseDto leitor,
     LocalDate dataDevolucao,
     EstadoEmprestimo estado,
-    boolean status
+    boolean status,
+    LocalDate dataCriacao,
+    LocalDate dataModificacao
 ) {
 
     public EmprestimoResponseDto(Emprestimo emprestimo){
-        this(emprestimo.getId(), new ExemplarResponseDto(emprestimo.getExemplar()), new LeitorResponseDto(emprestimo.getLeitor()), emprestimo.getDataDevolucao(), emprestimo.getEstado() ,emprestimo.isStatus());
+        this(emprestimo.getId(), new ExemplarResponseDto(emprestimo.getExemplar()), new LeitorResponseDto(emprestimo.getLeitor()), emprestimo.getDataDevolucao(), emprestimo.getEstado() ,emprestimo.isStatus(), emprestimo.getDataCriacao(), emprestimo.getDataModificacao());
     }
     
 }
