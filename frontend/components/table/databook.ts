@@ -72,6 +72,38 @@ export async function fetchBook(token:any, router: any, id: string) {
   }
 }
 
+export async function fetchHistoryBook(token:any, router: any, id: string) {
+  try {
+
+    if (!token) {
+      router.push("/signin")
+      alert('Token de autenticação não encontrado');
+    }
+
+    const response = await fetch(`http://localhost:8081/emprestimos/livro/historico/${id}`, {
+        method: 'GET',
+        headers: {
+        Authorization: `Bearer ${token}`
+        }
+    });
+    if (!response.ok) {
+
+      if(response.status == 403)
+          router.push("/signin")
+
+      throw new Error("Falha ao obter histórico do livro");
+    }
+
+    const data = await response.json();
+    const history = data;
+
+    return history;
+
+  } catch (error) {
+      console.error("Error:", error); 
+  }
+}
+
 export async function fetchDeleteBook(token:any, router: any, id: string) {
   try {
 

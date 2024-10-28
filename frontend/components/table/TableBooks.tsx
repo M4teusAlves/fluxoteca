@@ -33,10 +33,11 @@ import ModalAddExemplar from "../modal/book/ModalAddExemplar";
 import { useRouter } from "next/navigation";
 import ModalDeleteBook from "../modal/book/ModalDeleteBook";
 import ModalExemplarList from "../modal/exemplar/ModalExemplarList";
-import { Edit } from "@mui/icons-material";
+import { Edit, History } from "@mui/icons-material";
 import ModalUpdateBooks from "../modal/book/ModalUpdateBook";
 import ModalUpdateBook from "../modal/book/ModalUpdateBook";
 import { useTipo } from "@/hooks/useTipo";
+import ModalBookHistory from "../modal/book/ModalBookHistory";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -111,6 +112,12 @@ export default function TableBook() {
 
   const handleClickUpdateBook = () => {
     setShowModalUpdateBook(true);
+  }
+
+  const [showModalBookHistory, setShowModalBookHistory] = useState(false);
+
+  const handleClickHistoryReader = () => {
+    setShowModalBookHistory(true)
   }
 
   const [filterValue, setFilterValue] = useState("");
@@ -213,6 +220,12 @@ export default function TableBook() {
                 handleClickDeleteBook()
               }}>
                 <DeleteIcon className="text-[#7B6ED6]" />
+              </Button>
+                <Button isIconOnly size="sm" variant="bordered" title="Histórico" onPress={() => {
+                setCurrentBookID(book.id)
+                handleClickHistoryReader()
+              }}>
+                <History className="text-[#7B6ED6]"/>
               </Button>
             </div>}
           </div>
@@ -363,6 +376,10 @@ export default function TableBook() {
       }} bookID={currentBookID}/>}
       {showModalUpdateBook && <ModalUpdateBook isOpen={showModalUpdateBook} onClose={() => {
         setShowModalUpdateBook(false)
+        setIsLoading(true);
+      }} bookID={currentBookID}/>}
+      {showModalBookHistory && <ModalBookHistory isOpen={showModalBookHistory} onClose={() => {
+        setShowModalBookHistory(false)
         setIsLoading(true);
       }} bookID={currentBookID}/>}
     </main>
