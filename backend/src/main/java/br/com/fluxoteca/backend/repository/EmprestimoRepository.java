@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.fluxoteca.backend.model.Categoria;
 import br.com.fluxoteca.backend.model.Emprestimo;
+import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.model.Leitor;
 import br.com.fluxoteca.backend.model.Livro;
 
@@ -19,6 +20,8 @@ import br.com.fluxoteca.backend.model.enums.EstadoEmprestimo;
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long>{
     
     List<Emprestimo> findByStatus(boolean status);
+
+    List<Emprestimo> findByExemplar(Exemplar exemplar);
 
     @Query("select e from Emprestimo e where status=true and estado!=FINALIZADO")
     List<Emprestimo> findToValidation();

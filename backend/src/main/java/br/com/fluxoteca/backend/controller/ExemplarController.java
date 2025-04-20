@@ -21,6 +21,7 @@ import br.com.fluxoteca.backend.dto.Exemplar.CriacaoExemplarDto;
 import br.com.fluxoteca.backend.model.Exemplar;
 import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LivroRepository;
+import br.com.fluxoteca.backend.service.ExemplarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,9 @@ public class ExemplarController {
 
     @Autowired
     private LivroRepository livroRepository;
+
+    @Autowired
+    private ExemplarService exemplarService;
 
     @PostMapping
     @Transactional
@@ -124,8 +128,7 @@ public class ExemplarController {
     @Transactional
     @Operation(summary = "Deleta um Exemplar")
     public ResponseEntity<Void> deletar(@PathVariable String id){
-        var exemplar = exemplarRepository.getReferenceById(id);
-        exemplar.inativar();
+        exemplarService.deletarExemplar(exemplarRepository.getReferenceById(id));
         return ResponseEntity.noContent().build();
     }
 
