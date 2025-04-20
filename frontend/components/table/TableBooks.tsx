@@ -64,6 +64,7 @@ export default function TableBook() {
   const [books, setBooks] = useState<Book[]>([]); // State to store fetched users
   const [isLoading, setIsLoading] = useState(false);
   const [currentBookID, setCurrentBookID] = useState(0)
+  const [currentBook, setCurrentBook] = useState<Book|null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -210,7 +211,7 @@ export default function TableBook() {
                 <Edit className="text-[#7B6ED6]" />
               </Button>
               <Button isIconOnly size="sm" variant="bordered" title="Adicionar Exemplar" onPress={() => {
-                setCurrentBookID(book.id)
+                setCurrentBook(book)
                 handleClickAddExemplar()
               }}>
                 <AddIcon className="text-[#7B6ED6]" />
@@ -365,7 +366,7 @@ export default function TableBook() {
       {showModalExemplar && <ModalAddExemplar isOpen={showModalExemplar} onClose={() => {
         setShowModalExemplar(false)
         setIsLoading(true);
-      }} bookID={currentBookID}/>}
+      }} book={currentBook}/>}
       {showModalDeleteBook && <ModalDeleteBook isOpen={showModalDeleteBook} onClose={() => {
         setShowModalDeleteBook(false)
         setIsLoading(true);

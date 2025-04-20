@@ -21,19 +21,6 @@ export default function ModalUser({ isOpen, onClose }: any) {
     return emailRegex.test(email);
   };
 
-  // Validate phone
-  const formatPhoneNumber = (phoneNumber: string) => {
-    // Remove all non-digit characters
-    const digits = phoneNumber.replace(/\D/g, '');
-    // format the number using regex (34) 9 9999-9999
-    return digits.slice(0, 12).replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
-  };
-
-  const handlePhoneInput = (event: any) => {
-    const phone = event.target.value;
-    const formattedNumber = formatPhoneNumber(phone);
-    setPhoneNumber(formattedNumber);
-  };
 
   // Validate form fields
   const validateForm = (form: FormData) => {
@@ -188,13 +175,11 @@ export default function ModalUser({ isOpen, onClose }: any) {
                   <div> {/* Phone Number Input */}
                     {errors.telefone && <p className="text-red-500 text-xs absolute right-8 mt-7">{errors.telefone}</p>}
                     <Input
-                      type="tel"
                       label="Telefone"
-                      placeholder="(DDD) 9 xxxx - xxxx"
+                      placeholder="999999999999999999"
                       variant="bordered"
+                      type="number"
                       name="telefone"
-                      value={phoneNumber}
-                      onChange={handlePhoneInput}
                     />
                   </div>
 

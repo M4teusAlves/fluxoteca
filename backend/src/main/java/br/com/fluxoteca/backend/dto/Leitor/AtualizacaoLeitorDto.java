@@ -21,7 +21,6 @@ public record AtualizacaoLeitorDto(
     String afiliacao,
     LocalDate dataNascimento,
     @Size(max = 16)
-    @Pattern(regexp = "^\\(\\d{2}\\)\\ \\d\\ \\d{4}\\-\\d{4}$")
     String telefone
 ) {
     

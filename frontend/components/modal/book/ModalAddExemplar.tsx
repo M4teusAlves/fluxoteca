@@ -6,7 +6,7 @@ import { useJwtToken } from "@/hooks/useJwtToken";
 
 import { useRouter } from 'next/navigation'
 
-export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
+export default function ModalAddExemplar({ isOpen, onClose, book }: any) {
   const [exemplarID, setExemplarID] = useState('');
   const [location, setLocation] = useState('');
   const [errors, setErrors] = useState<{ id?: string }>({});
@@ -44,7 +44,7 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
 
       const exemplar = {
         id: exemplarID,
-        livroId: parseInt(bookID),
+        livroId: parseInt(book.id),
         localizacao: location
       };
 
@@ -81,7 +81,7 @@ export default function ModalAddExemplar({ isOpen, onClose, bookID }: any) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-lg">
-                Cadastro de exemplar
+                Cadastro de exemplar do Livro {" "+book.nome}
                 {showMessageConfimation && <p className="text-green-600 text-sm fixed mt-7">{messageConfirmation}</p>}
                 {showMessageError && <p className="text-red-600 text-sm fixed mt-7">{messageError}</p>}
               </ModalHeader>
