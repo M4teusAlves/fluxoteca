@@ -3,6 +3,8 @@ package br.com.fluxoteca.backend.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.fluxoteca.backend.dto.Livro.AtualizacaoLivroDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,6 +35,7 @@ public class Livro {
     @ManyToOne
     private Categoria categoria;
     @OneToMany(mappedBy = "livro", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Exemplar> exemplares;
     private boolean status;
     private LocalDate dataCriacao;

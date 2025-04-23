@@ -1,5 +1,6 @@
 package br.com.fluxoteca.backend.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import br.com.fluxoteca.backend.repository.AutorRepository;
 import br.com.fluxoteca.backend.repository.CategoriaRepository;
 import br.com.fluxoteca.backend.repository.ExemplarRepository;
 import br.com.fluxoteca.backend.repository.LivroRepository;
+import br.com.fluxoteca.backend.service.BackupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
@@ -48,6 +50,9 @@ public class LivroController {
 
     @Autowired
     private ExemplarRepository exemplarRepository;
+
+    @Autowired
+    private BackupService backupService;
 
     @PostMapping
     @Transactional
@@ -162,6 +167,16 @@ public class LivroController {
         livro.ativar();
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/backup")
+    @Transactional
+    @Operation(summary = "Backup")
+    public ResponseEntity<Void> backup() throws IOException{
+
+        backupService.gerarBackupJson();
+        
+        return ResponseEntity.ok().build();
     }
 
 }

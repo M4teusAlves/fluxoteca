@@ -129,6 +129,34 @@ export async function fetchDeleteBook(token:any, router: any, id: string) {
       console.error("Error:", error); 
   }
 }
+
+export async function fetchGenerateBackup(token:any, router:any) {
+  try {
+
+      if (!token) {
+        router.push("/signin")
+        alert('Token de autenticação não encontrado');
+      }
+  
+      const res = await fetch(`http://localhost:8081/livros/backup`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!res.ok) {
+
+        //if(res.status == 403)
+            //router.push("/signin")
+
+        throw new Error("Falha ao realizar o Backup");
+      }
+  } catch (error) {
+      console.error("Error:", error); 
+  }
+}
  
 export {columns, fetchBooks, statusOptions};
   

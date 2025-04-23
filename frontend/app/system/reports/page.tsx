@@ -2,9 +2,10 @@
 import DailyRegisterList from "@/components/reports/DailyRegisterList";
 import ReportCard from "@/components/reports/ReportCard";
 import { fetchReport } from "@/components/reports/dataReports";
+import { fetchGenerateBackup } from "@/components/table/databook";
 import { useJwtToken } from "@/hooks/useJwtToken";
 import { useLogin } from "@/hooks/useLogin";
-import {ScrollShadow } from "@nextui-org/react"
+import {Button, ScrollShadow } from "@nextui-org/react"
 import {Accordion, AccordionItem} from "@nextui-org/react";
 import { fetchData } from "next-auth/client/_utils";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,11 @@ export default function Reports(){
 
     const token = useJwtToken();
     const [report, setReport] = useState<report | undefined>(undefined);
+
+    const [showMessageConfimation, setShowMessageConfirmation] = useState(false);
+    const messageConfirmation = 'Backup realizado com sucesso.'
+    const [showMessageError, setShowMessageError] = useState(false);
+    const messageError = 'Erro ao realizar backup'
     
 
     useEffect(() => {
@@ -35,13 +41,33 @@ export default function Reports(){
         fetchData();
       }, [token]);
 
+    const backupGenerate = async () =>{
+
+      try{
+
+        if (!token) return;
+        await fetchGenerateBackup(token, router);
+        setShowMessageConfirmation(true)
+        setTimeout(() => setShowMessageConfirmation(false), 3000)
+      }catch (error){
+        setShowMessageError(true)
+        console.error("Erro ao realizar backup: ", error);
+        setTimeout(() => setShowMessageError(false), 3000)
+
+      }
+
+    }
+
 
     return(
         <div className="flex w-full flex-col p-5 gap-7">
             <header className="flex p-4 justify-between items-center">
                 <h1 className="text-2xl">Relatório Semestral</h1>
                 <p className="text-xl font-bold">Usuário: {login}</p>
+                <Button className="bg-[#7B6ED6]" onPress={backupGenerate}>Gerar Backup</Button>
             </header>
+            {showMessageConfimation && <p className="text-green-600 text-sm">{messageConfirmation}</p>}
+            {showMessageError && <p className="text-red-600 text-sm">{messageError}</p>}
             <main className="flex justify-center gap-8" onChange={()=>{fetchData}}>
                 <DailyRegisterList setReport={setReport}/>
                 <section className="flex gap-2 flex-wrap w-[60rem] items-center">
